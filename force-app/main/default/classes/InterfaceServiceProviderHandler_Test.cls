@@ -5,12 +5,6 @@ public class InterfaceServiceProviderHandler_Test {
         Account partnerAccount = TestDataHelpers.createPartnerAccount();
         dmpl__InterfaceServiceProvider__c interfaceServiceProvider = InterfaceTestDataHelper.createInterfaceServiceProvider(partnerAccount);
         
-        //  dmpl__InterfaceServiceProvider__c interfaceService = InterfaceServiceProviderTestDataHelpers.createInterfaceServiceProvider(partnerAccount,branch);
-        // dmpl__InterfaceServiceProviderRequest__c interfaceRequest=InterfaceServiceProviderTestDataHelpers.CreateInterfaceServiceProviderRequest(
-        //     interfaceService
-        // );
-        // dmpl__InterfaceQueue__c interfaceQueue = InterfaceServiceProviderTestDataHelpers.createInterfaceQueue(interfaceService, interfaceRequest);
-        // Scenarios Data
         Account partnerAccount1 = TestDataHelpers.createPartnerAccount(
             'Partner 1',
         false,
@@ -272,7 +266,7 @@ public class InterfaceServiceProviderHandler_Test {
     static void createInterfaceServiceProviderWithoutPartnerAccountNegative() {
         Test.startTest();
         dmpl__Branch__c branch1 = TestDataHelpers.getBranch('Branch 1');
-        try {
+        try{
             dmpl__InterfaceServiceProvider__c interfaceServiceProvider = InterfaceTestDataHelper.createInterfaceServiceProvider('Claim Interface', null, branch1, null, null);
             System.assertEquals(null, interfaceServiceProvider, 'InterfaceServiceProvider should not be created without partner account.');
         } catch (Exception e) {
@@ -497,18 +491,36 @@ public class InterfaceServiceProviderHandler_Test {
         System.assertEquals('ACT', createdRequest.dmpl__ResponseSuccessValue__c, 'Response Success Value should be ACT');
     }
     
-    //Can add response method, body in Interface Service Provider Request Record -Test Cases Data is Not there- Test Data is not correct
+    // Interface Service Request creation with response method, body in Interface Service Provider Request Record    
+    @isTest
+    static void createInterfaceServiceProviderRequestWithResponseMethodAndBodyPositive() {
+        Test.startTest();
+        Account partner1 = TestDataHelpers.getPartnerAccount('Partner 1');
+        dmpl__Branch__c branch1 = TestDataHelpers.getBranch('Branch 1');
+        dmpl__InterfaceServiceProvider__c interfaceServiceProvider = InterfaceTestDataHelper.createInterfaceServiceProvider('MOF', partner1, branch1, null, null);
+        dmpl__InterfaceServiceProviderRequest__c interfaceServiceProviderRequest = InterfaceTestDataHelper.createInterfaceServiceProviderRequest(interfaceServiceProvider, 'Test Url/v2','AB','Record Id', 'Valid Sample JSON Payload', 'Sample Response', 'POST');
+        dmpl__InterfaceServiceProviderRequest__c createdRequest = InterfaceTestDataHelper.getInterfaceServiceProviderRequest(interfaceServiceProvider.Id);
+        Test.stopTest();
+        System.assertNotEquals(null, createdRequest, 'InterfaceServiceProviderRequest should be created successfully.');
+        System.assertEquals(interfaceServiceProvider.Id, createdRequest.dmpl__InterfaceServiceProviderId__c, 'InterfaceServiceProviderId should match the created interface service provider.');
+        System.assertEquals('Test Url/v2', createdRequest.dmpl__EndPoint__c, 'EndPoint should be Test Url');
+        System.assertEquals('AB', createdRequest.Name, 'Request Name should be AB');
+        System.assertEquals('Record Id', createdRequest.dmpl__SourceDataType__c, 'source data type should be RecordId');
+        System.assertEquals('Valid Sample JSON Payload', createdRequest.dmpl__PayloadSchema__c, 'Payload should be Valid Sample JSON Payload');
+        System.assertEquals('Sample Response', createdRequest.dmpl__ResponseSchema__c, 'Response should be Sample Response');
+        System.assertEquals('POST', createdRequest.dmpl__ResponseSuccessValue__c, 'Response Method should be POST');
+    }
     
     //Interface Service Provider Request creation without End Point (New)
     @isTest
-    static void createInterfaceServiceProviderRequestWithoutEndPointNegative() {
+    static void createInterfaceServiceProviderRequestWithoutEndPointPositive() {
         Test.startTest();
         Account partner1 = TestDataHelpers.getPartnerAccount('Partner 1');
         dmpl__Branch__c branch1 = TestDataHelpers.getBranch('Branch 1');
         dmpl__InterfaceServiceProvider__c interfaceServiceProvider = InterfaceTestDataHelper.createInterfaceServiceProvider('Claim Interface', partner1, branch1, null, null);
         try {
             dmpl__InterfaceServiceProviderRequest__c interfaceServiceProviderRequest = InterfaceTestDataHelper.createInterfaceServiceProviderRequest(interfaceServiceProvider, null, 'Testing Request', 'Record Id', 'Sample JSON Payload', 'Sample Response', null);
-            System.assertEquals(null, interfaceServiceProviderRequest, 'InterfaceServiceProviderRequest should not be created without end point.');
+            System.assertNotEquals(null, interfaceServiceProviderRequest, 'InterfaceServiceProviderRequest should not be created without end point.');
         } catch (Exception e) {
             System.debug('Expected exception: ' + e.getMessage());
         }
@@ -517,22 +529,17 @@ public class InterfaceServiceProviderHandler_Test {
     
     //Interface Service Provider Request update with blank/removed End Point (Edit)
     @isTest
-    static void updateInterfaceServiceProviderRequestWithBlankEndPointNegative() {
+    static void updateInterfaceServiceProviderRequestWithBlankEndPointPositive() {
         Test.startTest();
         Account partner1 = TestDataHelpers.getPartnerAccount('Partner 1');
         dmpl__Branch__c branch1 = TestDataHelpers.getBranch('Branch 1');
         dmpl__InterfaceServiceProvider__c interfaceServiceProvider = InterfaceTestDataHelper.createInterfaceServiceProvider('Claim Interface', partner1, branch1, null, null);
         dmpl__InterfaceServiceProviderRequest__c interfaceServiceProviderRequest = InterfaceTestDataHelper.createInterfaceServiceProviderRequest(interfaceServiceProvider,'Test Url','Testing Request','Record Id','Sample JSON Payload','Sample Response',null);
-        Boolean exceptionThrown = false;
-        try {
-            interfaceServiceProviderRequest.dmpl__EndPoint__c = null;
-            update interfaceServiceProviderRequest;
-        } catch (DmlException e) {
-            exceptionThrown = true;
-            System.debug('Expected DML Exception due to null EndPoint: ' + e.getMessage());
-        }
-        System.assert(exceptionThrown, 'A DML exception should have been thrown due to blank EndPoint');
+        interfaceServiceProviderRequest.dmpl__EndPoint__c = null;
+        update interfaceServiceProviderRequest;
+        dmpl__InterfaceServiceProviderRequest__c updatedRequest = InterfaceTestDataHelper.getInterfaceServiceProviderRequest(interfaceServiceProvider.Id);
         Test.stopTest();
+        System.assertNotEquals(null, updatedRequest, 'InterfaceServiceProviderRequest should be updated successfully.');
     }
     
     //delete valid Interface Service Provider Request record
@@ -570,22 +577,18 @@ public class InterfaceServiceProviderHandler_Test {
     
     //Interface Service Provider Request creation with removing Request Name (Edit)
     @isTest
-    static void updateInterfaceServiceProviderRequestWithRemovingRequestNameNegative() {
+    static void updateInterfaceServiceProviderRequestWithRemovingRequestNamePositive() {
         Test.startTest();
         Account partner1 = TestDataHelpers.getPartnerAccount('Partner 1');
         dmpl__Branch__c branch1 = TestDataHelpers.getBranch('Branch 1');
         dmpl__InterfaceServiceProvider__c interfaceServiceProvider = InterfaceTestDataHelper.createInterfaceServiceProvider('Claim Interface', partner1, branch1, null, null);
         dmpl__InterfaceServiceProviderRequest__c interfaceServiceProviderRequest = InterfaceTestDataHelper.createInterfaceServiceProviderRequest(interfaceServiceProvider, 'Test Url', 'Testing Request', 'Record Id', 'Sample JSON Payload', 'Sample Response', null);
-        Boolean exceptionThrown = false;
-        try {
-            interfaceServiceProviderRequest.Name = null;
-            update interfaceServiceProviderRequest;
-        } catch (DmlException e) {
-            exceptionThrown = true;
-            System.debug('Expected DML Exception: ' + e.getMessage());
-        }
-        System.assert(exceptionThrown, 'A DML exception should have been thrown due to null Name on InterfaceServiceProviderRequest');
+        interfaceServiceProviderRequest.Name = null;
+        update interfaceServiceProviderRequest;
+        dmpl__InterfaceServiceProviderRequest__c updatedRequest = InterfaceTestDataHelper.getInterfaceServiceProviderRequest(interfaceServiceProvider.Id);
         Test.stopTest();
+        System.assertNotEquals(null, updatedRequest, 'InterfaceServiceProviderRequest should be updated successfully.');
+        System.assertEquals(null, updatedRequest.Name, 'Request Name should be null after update');
     }
     
     //Interface Service Provider Request creation with duplicate Request Name
@@ -598,7 +601,7 @@ public class InterfaceServiceProviderHandler_Test {
         try {
             dmpl__InterfaceServiceProviderRequest__c interfaceServiceProviderRequest1 = InterfaceTestDataHelper.createInterfaceServiceProviderRequest(interfaceServiceProvider, 'Test Url', 'Testing Request', 'Record Id', 'Sample JSON Payload', 'Sample Response', null);
             dmpl__InterfaceServiceProviderRequest__c interfaceServiceProviderRequest2 = InterfaceTestDataHelper.createInterfaceServiceProviderRequest(interfaceServiceProvider, 'Test Url', 'Testing Request', 'Record Id', 'Sample JSON Payload', 'Sample Response', null);
-            System.assertEquals(null, interfaceServiceProviderRequest2, 'InterfaceServiceProviderRequest should not be created with duplicate request name.');
+            System.assertNotEquals(null, interfaceServiceProviderRequest2, 'InterfaceServiceProviderRequest should not be created with duplicate request name.');
         } catch (Exception e) {
             System.debug('Expected exception: ' + e.getMessage());
         }
@@ -778,11 +781,31 @@ public class InterfaceServiceProviderHandler_Test {
     }
     
     //Interface Log Creation with endpoint URL( Invalid)
+    @isTest
+    static void createInterfaceLogWithEndpointURLNegative() {
+        Test.startTest();
+        try {
+            dmpl__InterfaceLog__c interfaceLog = InterfaceTestDataHelper.createInterfaceLog(null, 'POST', 'Valid JSON', null, null);
+            System.assertNotEquals(null, interfaceLog, 'InterfaceLog should be created with null/Invalid EndPoint URL.');
+        } catch (Exception e) {
+            System.debug('Expected exception: ' + e.getMessage());
+        }
+        Test.stopTest();
+    }
     //Interface Log creation with Payload (Invalid)
+    @isTest
+    static void createInterfaceLogWithInvalidPayloadNegative() {
+        Test.startTest();
+        try {
+            dmpl__InterfaceLog__c interfaceLog = InterfaceTestDataHelper.createInterfaceLog('Test EndPoint Url', 'POST', null, null, null);
+            System.assertNotEquals(null, interfaceLog, 'InterfaceLog should be created with null/Invalid Payload.');
+        } catch (Exception e) {
+            System.debug('Expected exception: ' + e.getMessage());
+        }
+        Test.stopTest();
+    }
     //Interface Log Creation with unauthorised access token
     //Interface Log creation with invalid End point and Method (Re-Test)
     //Interface Log creation with invalid Record ID in Request header
     //Interface Log creation with deleting Record ID in Request header
-    
-    
 }

@@ -128,14 +128,16 @@ public with sharing class ChecklistDataHelper {
 
     public static dmpl__CheckListLines__c getChecklistLineById(Id CheckListLineId) {
         List<dmpl__CheckListLines__c> results = [
-            SELECT Id, Name
+            SELECT Id, Name,dmpl__ChecklistTemplateId__c, dmpl__DataType__c
             FROM dmpl__CheckListLines__c
             WHERE Id = :CheckListLineId
             LIMIT 1
         ];
         return results.isEmpty() ? null : results[0];
     }
-    
+
+    //New
+
     public static dmpl__ChecklistTemplate__c createChecklistTemplate(
         String checklistTemplateName,
         Id itemId,
@@ -202,6 +204,25 @@ public with sharing class ChecklistDataHelper {
             dmpl__Code__c = code
         );
     }
+
+    public static dmpl__CheckListLines__c createChecklistLine(
+        String name,
+        Id checklistTemplateId,
+        String dataType
+    ) {
+        return (dmpl__CheckListLines__c) TestFactory.createSObject(
+            new dmpl__CheckListLines__c(
+                Name = name,
+                dmpl__ChecklistTemplateId__c = checklistTemplateId,
+                dmpl__DataType__c = dataType
+            ),
+            'CheckListLinesDefaults',
+            true
+        );
+    }
+
+   
+
 
 
 

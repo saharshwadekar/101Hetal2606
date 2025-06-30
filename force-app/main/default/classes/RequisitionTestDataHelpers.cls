@@ -50,6 +50,23 @@ public class RequisitionTestDataHelpers {
             true
         );
     }
+    public static dmpl__PurchaseRequisitionLine__c CreateRequistionLine(
+        dmpl__PurchaseRequisition__c purchaseRequisition,
+        dmpl__Item__c item,
+        Decimal quantity,
+        Decimal unitCost
+    ) {
+        return (dmpl__PurchaseRequisitionLine__c)TestFactory.createSObject(
+            new dmpl__PurchaseRequisitionLine__c(
+                dmpl__PurchaseRequisitionId__c = purchaseRequisition.Id,
+                dmpl__ItemId__c = item.Id,
+                dmpl__Quantity__c = quantity,
+                dmpl__UnitCost__c = unitCost
+            ),
+            //'PurchaseRequisitionLineDefaults',
+            true
+        );
+    }
 
     public static dmpl__PurchaseRequisitionLine__c getRequisitionLine(){
         return [SELECT 

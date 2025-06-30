@@ -1,6 +1,8 @@
 @isTest
 public with sharing class SaleOrderDataHelper {
-    public static dmpl__SaleOrder__c createSaleOrder(
+
+
+        public static dmpl__SaleOrder__c createSaleOrder(
         Account customerAccount,
         dmpl__Branch__c branch,
         dmpl__ContactAddress__c contactAddress,
@@ -25,6 +27,33 @@ public with sharing class SaleOrderDataHelper {
             true
         );
     }
+    
+    public static dmpl__SaleOrder__c createSaleOrderById(
+        Account customerAccount,
+        dmpl__Branch__c branch,
+        dmpl__ContactAddress__c contactAddress,
+        dmpl__PriceList__c priceList
+    ) {
+        return (dmpl__SaleOrder__c) TestFactory.createSObject(
+            new dmpl__SaleOrder__c(
+                dmpl__AccountId__c                  = customerAccount != null ? customerAccount.Id : null,
+                dmpl__PartnerAccountId__c           = branch != null ? branch.dmpl__PartnerAccountId__c : null,
+                dmpl__BranchId__c                   = branch != null ? branch.Id : null,
+                dmpl__DocumentDate__c               = Date.today(),
+                dmpl__Status__c                     = 'Draft',
+                dmpl__RequiredDate__c               = Date.today(),
+                dmpl__PriceListId__c                = priceList != null ? priceList.Id : null,
+                dmpl__BookingAmount__c              = 100,
+                dmpl__PromisedDate__c               = Date.today(),
+                dmpl__PerformReleaseFulfilment__c   = false,
+                dmpl__PerformReleaseInvoice__c      = false,
+                dmpl__PerformReleaseDelivery__c     = false
+            ),
+            'SaleOrderDefaults',
+            true
+        );
+    }
+
 
     public static dmpl__SaleOrder__c createSaleOrder(
         Id customerAccountId,
@@ -48,6 +77,83 @@ public with sharing class SaleOrderDataHelper {
             'SaleOrderDefaults',
             true
         );
+    }
+    
+      public static dmpl__SaleOrder__c createSaleOrder(
+        Id customerAccountId,
+        Id partnerAccountId,
+        Id branchId,
+        Id billingAddressId,
+        Id shippingAddressId,
+        Boolean skipScheme,
+        Id resourceId,
+        String taxSupplyType
+    ) {
+        return (dmpl__SaleOrder__c) TestFactory.createSObject(
+            new dmpl__SaleOrder__c(
+                dmpl__PartnerAccountId__c = partnerAccountId,
+                dmpl__BranchId__c = branchId,
+                dmpl__AccountId__c = customerAccountId,
+                dmpl__ShippingAddressId__c = shippingAddressId,
+                dmpl__BillingAddressId__c =  billingAddressId,
+                dmpl__SkipScheme__c = skipScheme,
+                dmpl__SalesExecutiveId__c = resourceId,
+                dmpl__TaxSupplyType__c = taxSupplyType
+            ),
+            'SaleOrderDefaults',
+            true
+        );
+    }
+
+    public static dmpl__SaleOrder__c updateSaleOrder(
+        Account customerAccount,
+        dmpl__Branch__c branch,
+        dmpl__ContactAddress__c contactAddress,
+         dmpl__PriceList__c priceList,
+         dmpl__SaleOrder__c saleOrder
+    ) {
+        return (dmpl__SaleOrder__c) TestFactory.createSObject(
+            new dmpl__SaleOrder__c(
+                id = saleOrder.id,
+                dmpl__AccountId__c = customerAccount.Id,
+                dmpl__PartnerAccountId__c = branch.dmpl__PartnerAccountId__c,
+                dmpl__BranchId__c = branch.Id,
+                dmpl__DocumentDate__c = Date.today(),
+                dmpl__Status__c = 'Booked',
+                dmpl__BillingAddressId__c = contactAddress.Id,
+                dmpl__RequiredDate__c = Date.today()+2,
+                dmpl__BookingAmount__c = 200,
+                dmpl__PromisedDate__c = Date.today(),
+                dmpl__PerformReleaseFulfilment__c = false,
+                dmpl__PerformReleaseInvoice__c = false,
+                dmpl__PerformReleaseDelivery__c = false
+            ),
+            'SaleOrderDefaults',
+            false
+        );
+    }
+
+    public static dmpl__PriceListRules__c getpriceListrule(Id pricelistId , Id Itemid)
+    {    return 
+            [
+                SELECT Id, 
+                        dmpl__Price__c,
+                        dmpl__ItemId__c
+                FROM dmpl__PriceListRules__c
+                WHERE dmpl__PriceListId__c =:pricelistId
+                AND dmpl__ItemId__c =: Itemid
+                LIMIT 1
+            ];
+    }
+
+    public static dmpl__PriceList__c getpriceList(Id pricelistId)
+    {    return 
+            [
+                SELECT Id
+                FROM dmpl__PriceList__c
+                WHERE Id =:pricelistId
+                LIMIT 1
+            ];
     }
 
     public static dmpl__SaleOrder__c getSaleOrder() {
@@ -123,14 +229,13 @@ public with sharing class SaleOrderDataHelper {
         dmpl__TaxGroup__c taxGroup
     ) {
         return (dmpl__SaleOrderLine__c) TestFactory.createSObject(
-            new dmpl__SaleOrderLine__c(
-                dmpl__SaleOrderId__c = saleOrder.Id,
-                dmpl__ItemId__c = item.Id,
-                dmpl__SKUId__c = sku.Id,
-                dmpl__Quantity__c = 15,
-                dmpl__TaxGroupId__c = taxGroup.Id,
-                dmpl__Discount__c = 5
-            ),
+            new dmpl__SaleOrderLine__c(dmpl__SaleOrderId__c = saleOrder.Id,
+                                                     dmpl__ItemId__c = item.Id,
+                                                     dmpl__SKUId__c = sku.Id, 
+                                                     dmpl__Quantity__c = 15,
+                                                     dmpl__TaxGroupId__c = taxGroup.Id,
+                                                     dmpl__Discount__c = 5
+                                                    ),
             true
         );
     }
@@ -142,12 +247,11 @@ public with sharing class SaleOrderDataHelper {
         Id skuId
     ) {
         return (dmpl__SaleOrderLine__c) TestFactory.createSObject(
-            new dmpl__SaleOrderLine__c(
-                dmpl__SaleOrderId__c = saleOrderId,
-                dmpl__ItemId__c = itemId,
-                dmpl__Quantity__c = quantity,
-                dmpl__SKUId__c=skuId
-            ),
+            new dmpl__SaleOrderLine__c(dmpl__SaleOrderId__c = saleOrderId,
+                                                     dmpl__ItemId__c = itemId, 
+                                                     dmpl__Quantity__c = quantity,
+                                                     dmpl__SKUId__c=skuId
+                                                    ),
             true
         );
     }
@@ -166,6 +270,28 @@ public with sharing class SaleOrderDataHelper {
 
     public static dmpl__SKU__c getSKU(Id itemId) {
         return [SELECT Id, Name,dmpl__ItemId__c,dmpl__IsDefault__c FROM dmpl__SKU__c LIMIT 1];
+    }
+ 
+
+    public static dmpl__SaleOrderLine__c updateSaleOrderLine(
+        dmpl__SaleOrder__c saleOrder,
+        dmpl__Item__c item,
+        dmpl__SKU__c sku,
+        dmpl__TaxGroup__c taxGroup,
+        dmpl__SaleOrderLine__c saleOrderLine
+    ) {
+        return (dmpl__SaleOrderLine__c) TestFactory.createSObject(
+            new dmpl__SaleOrderLine__c(id = saleOrderLine.id,dmpl__SaleOrderId__c = saleOrder.Id,
+                                                     dmpl__ItemId__c = item.Id,
+                                                     dmpl__SKUId__c = sku.Id,
+                                                     dmpl__Quantity__c = 15,
+                                                     dmpl__TaxGroupId__c = taxGroup.Id,
+                                                     dmpl__UnitPrice__c = 500,
+                                                     dmpl__Discount__c = 5
+                                                    ),
+            'SaleOrderLineDefaults',
+            false
+        );
     }
     
     public static dmpl__SaleOrderTax__c createSaleOrderTax(
@@ -263,7 +389,7 @@ public with sharing class SaleOrderDataHelper {
                 dmpl__NetDiscount__c,
                 dmpl__BaseAmount__c,
                 dmpl__TaxAmount__c,
-            	dmpl__SKUId__c,
+                dmpl__SKUId__c,
                 dmpl__GrossAmount__c,
                 dmpl__TaxGroupId__c,
                 dmpl__TaxGroupId__r.Name,
@@ -287,6 +413,24 @@ public with sharing class SaleOrderDataHelper {
             LIMIT 1
         ];
     }
+
+    public static dmpl__SaleOrderLine__c createSaleOrderLineById(
+    Id saleOrderId,
+    Id itemId,
+    Integer quantity,
+    Id skuId
+) {
+    return (dmpl__SaleOrderLine__c) TestFactory.createSObject(
+        new dmpl__SaleOrderLine__c(
+            dmpl__SaleOrderId__c = saleOrderId != null ? saleOrderId : null,
+            dmpl__ItemId__c      = itemId != null ? itemId : null,
+            dmpl__Quantity__c    = quantity,
+            dmpl__SKUId__c       = skuId != null ? skuId : null
+        ),
+        true
+    );
+}
+
 
     public static List<dmpl__SaleOrderLine__c> getSaleOrderLines(Id saleOrderId) {
         return [

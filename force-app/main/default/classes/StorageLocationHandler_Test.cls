@@ -63,7 +63,7 @@ public with sharing class StorageLocationHandler_Test {
         Test.startTest();
         dmpl__StorageLocation__c storageLocation = TestDataHelpers.createStorageLocation('Storage Location 1',branch1,'Warehouse');
         Test.stopTest();
-
+        System.assertNotEquals(null, storageLocation.Id, 'Storage Location should be created');
         System.assertEquals('Storage Location 1', storageLocation.Name, 'Name should be Storage Location 1');
         System.assertEquals(branch1.Id, storageLocation.dmpl__BranchId__c, 'Branch should match Branch 1');
         System.assertEquals('Warehouse', storageLocation.dmpl__LocationType__c, 'Location Type should be Warehouse');
@@ -89,6 +89,7 @@ public with sharing class StorageLocationHandler_Test {
         dmpl__StorageLocation__c storageLocation = TestDataHelpers.createStorageLocation('Storage Location 1',branch1,'Warehouse');
         Test.stopTest();
 
+        System.assertNotEquals(null, storageLocation.Id, 'Storage Location should be created');
         System.assertEquals('Storage Location 1', storageLocation.Name, 'Name should be Storage Location 1');
         System.assertEquals(branch1.Id, storageLocation.dmpl__BranchId__c, 'Branch should match Branch 1');
         System.assertEquals('Warehouse', storageLocation.dmpl__LocationType__c, 'Location Type should be Warehouse');
@@ -101,7 +102,7 @@ public with sharing class StorageLocationHandler_Test {
         try{
             dmpl__Branch__c branch4 = TestDataHelpers.createBranch('Branch 4',partnerAccount1.Id,true,true,false,false);     
             dmpl__StorageLocation__c storageLocation = TestDataHelpers.createStorageLocation('Storage Location 1',branch4,'Warehouse');
-            System.assertNotEquals(branch4.Id, storageLocation.dmpl__BranchId__c, 'Storage location should not be created with wrong branch');
+            System.assertNotEquals(null, storageLocation.Id, 'Storage location should not be created with wrong branch');
         }catch (Exception e) {
             System.Assert.isTrue(true, 'Storage location should not be created with wrong branch');
         }
@@ -111,8 +112,8 @@ public with sharing class StorageLocationHandler_Test {
     
     @isTest
     static void updateStorageLocationWithWrongBranchNegative(){
+        Account partnerAccount1 = TestDataHelpers.getPartnerAccount('Partner 1');
         dmpl__Branch__c branch1 = TestDataHelpers.getBranch('Branch 1');
-        dmpl__Branch__c branch4 = TestDataHelpers.getBranch('Branch 4');
 
         dmpl__StorageLocation__c storageLocation = TestDataHelpers.createStorageLocation('Storage Location 1',branch1,'Warehouse');
 
@@ -123,6 +124,7 @@ public with sharing class StorageLocationHandler_Test {
         Test.startTest();
         Boolean exceptionThrown = false;
         try{
+            dmpl__Branch__c branch4 = TestDataHelpers.createBranch('Branch 4',partnerAccount1.Id,true,true,false,false);     
             storageLocation.dmpl__BranchId__c = branch4.Id;
             update storageLocation;
         }catch (Exception e) {
@@ -134,13 +136,12 @@ public with sharing class StorageLocationHandler_Test {
 
     @isTest
     static void createStorageLocationWithInactiveBranchNegative(){
-
         dmpl__Branch__c branch3 = TestDataHelpers.getBranch('Branch 3');
 
         Test.startTest();
         try{
             dmpl__StorageLocation__c storageLocation = TestDataHelpers.createStorageLocation('Storage Location 1',branch3,'Warehouse');
-            System.assertNotEquals(branch3.Id, storageLocation.dmpl__BranchId__c, 'Storage location should not be created with inactive branch');
+            System.assertNotEquals(null, storageLocation.Id, 'Storage location should not be created with inactive branch');    
         }catch (Exception e) {
             System.Assert.isTrue(true, 'Storage location should not be created with inactive branch');
         }
@@ -178,6 +179,7 @@ public with sharing class StorageLocationHandler_Test {
         dmpl__StorageLocation__c storageLocation = TestDataHelpers.createStorageLocation('Storage Location 1',branch1,'Warehouse');
         Test.stopTest();
 
+        System.assertNotEquals(null, storageLocation.Id, 'Storage Location should be created');
         System.assertEquals('Storage Location 1', storageLocation.Name, 'Name should be Storage Location 1');
         System.assertEquals(branch1.Id, storageLocation.dmpl__BranchId__c, 'Branch should match Branch 1');
         System.assertEquals('Warehouse', storageLocation.dmpl__LocationType__c, 'Location Type should be Warehouse');

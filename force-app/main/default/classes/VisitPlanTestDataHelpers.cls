@@ -344,4 +344,51 @@ public with sharing class VisitPlanTestDataHelpers {
             LIMIT 1
         ];
     }
+
+    public static dmpl__VisitPlan__c createVisitPlan(
+        String partnerName,
+        Boolean isPartnerActive,
+        String planName,
+        String visitPurpose,
+        String branchName,
+        Boolean isBranchActive,
+        Date planStartDate,
+        String visitTaskTemplateName
+    ) {
+        Account acc = (Account) TestFactory.createSObject(
+            new Account(
+                Name = partnerName,
+                dmpl__IsActive__c = isPartnerActive
+            ),
+            true
+        );
+
+        dmpl__Branch__c branch = (dmpl__Branch__c) TestFactory.createSObject(
+            new dmpl__Branch__c(
+                Name = branchName,
+                dmpl__IsActive__c = isBranchActive
+            ),
+            true
+        );
+
+        dmpl__VisitTaskTemplate__c template = (dmpl__VisitTaskTemplate__c) TestFactory.createSObject(
+            new dmpl__VisitTaskTemplate__c(Name = visitTaskTemplateName),
+            String.isNotBlank(visitTaskTemplateName)
+        );
+
+        return (dmpl__VisitPlan__c) TestFactory.createSObject(
+            new dmpl__VisitPlan__c(
+                dmpl__PartnerAccountId__c = acc.Id,
+                Name = planName,
+                dmpl__VisitPurpose__c = visitPurpose,
+                dmpl__BranchId__c = branch.Id,
+                dmpl__PlanStartDate__c = planStartDate,
+                dmpl__VisitTaskTemplateId__c = template != null ? template.Id : null
+            ),
+            true
+        );
+    }
+
+
+
 }

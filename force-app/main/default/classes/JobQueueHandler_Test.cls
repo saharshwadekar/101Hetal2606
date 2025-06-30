@@ -203,15 +203,16 @@ public with sharing class JobQueueHandler_Test {
     @isTest
 static void deleteJobQueueScenarioPositive() {
     Test.startTest();
-    dmpl__InterfaceQueue__c jobQueue = JobQueueTestDataHelper.createJobQueue('Interface Job', 'Queueable', 1, null, null);
+    dmpl__InterfaceQueue__c jobQueue = JobQueueTestDataHelper.createJobQueue('Interface Job', 'Manual', 1, null, null);
     delete jobQueue;
-    dmpl__InterfaceQueue__c deletedJobQueue;
+    dmpl__InterfaceQueue__c deletedJobQueue=null;
     try {
         deletedJobQueue = JobQueueTestDataHelper.getJobQueue(jobQueue.Id);
     } catch (QueryException e) {
         deletedJobQueue = null;
     }
     System.assertEquals(null, deletedJobQueue, 'JobQueue should be deleted.');
+    Test.stopTest();
 }
 
     //New Job Queue creation with Retry Count as negative number
@@ -304,5 +305,16 @@ static void deleteJobQueueScenarioPositive() {
             System.debug('Expected exception: ' + e.getMessage());
         }
         Test.stopTest();
+    }
+
+    //Job Queue record creation with host Id, Quantity , message, Record Id
+    @isTest
+    static void createJobQueueRecordWithHostIdQuantityMessageRecordIdPositive() {
+        Test.startTest();
+        dmpl__InterfaceQueue__c jobQueue = JobQueueTestDataHelper.createJobQueue('Interface Job', 'Queueable', 1, null, null);
+        dmpl__JobQueueRecord__c jobQueueRecord = JobQueueTestDataHelper.createJobQueueRecord('Host123', 'Test Message', 10, 'Record123', jobQueue);
+        Test.stopTest();
+        System.assertNotEquals(null, jobQueueRecord, 'Expected Job Queue Record to be created with specified Job Queue ID.');
+        System.assertEquals(jobQueue.Id, jobQueueRecord.dmpl__JobQueueId__c, 'Job Queue ID should match');
     }
 }

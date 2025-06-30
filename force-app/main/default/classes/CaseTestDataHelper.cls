@@ -97,7 +97,7 @@ public class CaseTestDataHelper {
                 dmpl__AccountId__c,
                 dmpl__BranchId__c,
                 dmpl__AssetId__c,
-            dmpl__DocumentDate__c
+                dmpl__DocumentDate__c
             FROM dmpl__Case__c
             WHERE Id = :id
             LIMIT 1];

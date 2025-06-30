@@ -198,142 +198,84 @@ public with sharing class ServiceCampaignTestDataHelpers {
 
 
 
-    //New Methods
-    public static dmpl__ServiceCampaign__c createServiceCampaign(String name) {
-        dmpl__ServiceCampaign__c campaign = (dmpl__ServiceCampaign__c) TestFactory.createSObject(
+    //New Methods:
+     public static dmpl__ServiceCampaign__c createServiceCampaign(String name) {
+        return (dmpl__ServiceCampaign__c) TestFactory.createSObject(
             new dmpl__ServiceCampaign__c(
                 Name = name
             ),
             true
         );
-        return campaign;
-    }
-
-    public static dmpl__ServiceCampaign__c getServiceCampaignByName(String name) {
-        return [
-            SELECT Id, Name
-            FROM dmpl__ServiceCampaign__c
-            WHERE Name = :name
-            LIMIT 1
-        ];
-    }
-
-    public static List<dmpl__ServiceCampaign__c> getServiceCampaigns() {
-        return [
-            SELECT Id, Name
-            FROM dmpl__ServiceCampaign__c
-        ];
     }
 
     public static dmpl__ServiceCampaignItem__c createServiceCampaignItem(
-        dmpl__ServiceCampaign__c campaign,
-        dmpl__Item__c item,
-        dmpl__ItemServiceContract__c itemServiceContract,
+        Id serviceCampaignId,
+        Id itemId,
+        Id itemServiceContractId,
         Decimal quantity,
         Boolean isMandatory
     ) {
-        dmpl__ServiceCampaignItem__c sci = (dmpl__ServiceCampaignItem__c) TestFactory.createSObject(
+        return (dmpl__ServiceCampaignItem__c) TestFactory.createSObject(
             new dmpl__ServiceCampaignItem__c(
-                dmpl__ServiceCampaignId__c = campaign != null ? campaign.Id : null,
-                dmpl__ItemId__c = item != null ? item.Id : null,
-                dmpl__ItemServiceContractId__c = itemServiceContract != null ? itemServiceContract.Id : null,
+                dmpl__ServiceCampaignId__c = serviceCampaignId,
+                dmpl__ItemId__c = itemId,
+                dmpl__ItemServiceContractId__c = itemServiceContractId,
                 dmpl__Quantity__c = quantity,
                 dmpl__IsMandatory__c = isMandatory
             ),
             true
         );
-        return sci;
     }
 
-    public static dmpl__ServiceCampaignItem__c getServiceCampaignItemByName(String name) {
-        return [
-            SELECT Id, Name, dmpl__ServiceCampaignId__c, dmpl__ItemId__c, dmpl__ItemServiceContractId__c,
-                   dmpl__Quantity__c, dmpl__IsMandatory__c
-            FROM dmpl__ServiceCampaignItem__c
-            WHERE Name = :name
-            LIMIT 1
-        ];
-    }
-
-    public static List<dmpl__ServiceCampaignItem__c> getServiceCampaignItemsByCampaign(Id campaignId) {
-        return [
-            SELECT Id, Name, dmpl__ItemId__c, dmpl__ItemServiceContractId__c, dmpl__Quantity__c, dmpl__IsMandatory__c
-            FROM dmpl__ServiceCampaignItem__c
-            WHERE dmpl__ServiceCampaignId__c = :campaignId
-        ];
-    }
-
-     public static dmpl__ServiceCampaignMember__c createServiceCampaignMember(
-        dmpl__ServiceCampaign__c campaign,
-        Account partnerAccount,
+    public static dmpl__ItemServiceContract__c createItemServiceContractWithName(
         dmpl__Item__c item,
-        Date dueDate,
+        String name
+    ) {
+        return (dmpl__ItemServiceContract__c) TestFactory.createSObject(
+            new dmpl__ItemServiceContract__c(
+                Name = name,
+                dmpl__ItemId__c = item.Id,
+                dmpl__DateEffectiveFrom__c = Date.today(),
+                dmpl__DateEffectiveTill__c = Date.today().addDays(7),
+                dmpl__PopulateContractLines__c = true
+            ),
+            true
+        );
+    }
+
+    public static dmpl__ServiceCampaignMember__c createServiceCampaignMember(
+        Id campaignId,
+        Id partnerAccountId,
+        Id itemId,
         String mobilePhone,
+        Date dueDate,
         Id branchId
     ) {
-        dmpl__ServiceCampaignMember__c member = (dmpl__ServiceCampaignMember__c) TestFactory.createSObject(
+        return (dmpl__ServiceCampaignMember__c) TestFactory.createSObject(
             new dmpl__ServiceCampaignMember__c(
-                dmpl__ServiceCampaignId__c = campaign != null ? campaign.Id : null,
-                dmpl__PartnerAccountId__c = partnerAccount != null ? partnerAccount.Id : null,
-                dmpl__ItemId__c = item != null ? item.Id : null,
-                dmpl__DueDate__c = dueDate != null ? dueDate : Date.today().addDays(7),
+                dmpl__ServiceCampaignId__c = campaignId,
+                dmpl__PartnerAccountId__c = partnerAccountId,
+                dmpl__ItemId__c = itemId,
                 dmpl__MobilePhone__c = mobilePhone,
+                dmpl__DueDate__c = dueDate,
                 dmpl__BranchId__c = branchId
             ),
             true
         );
-        return member;
-    }
-
-    public static dmpl__ServiceCampaignMember__c getServiceCampaignMemberByName(String name) {
-        return [
-            SELECT Id, Name, dmpl__ServiceCampaignId__c, dmpl__PartnerAccountId__c,
-                   dmpl__ItemId__c, dmpl__DueDate__c, dmpl__MobilePhone__c, dmpl__BranchId__c
-            FROM dmpl__ServiceCampaignMember__c
-            WHERE Name = :name
-            LIMIT 1
-        ];
-    }
-
-    public static List<dmpl__ServiceCampaignMember__c> getServiceCampaignMembersByCampaign(Id campaignId) {
-        return [
-            SELECT Id, Name, dmpl__PartnerAccountId__c, dmpl__ItemId__c, dmpl__DueDate__c,
-                   dmpl__MobilePhone__c, dmpl__BranchId__c
-            FROM dmpl__ServiceCampaignMember__c
-            WHERE dmpl__ServiceCampaignId__c = :campaignId
-        ];
     }
 
     public static dmpl__ServiceCampaignRule__c createServiceCampaignRule(
-        dmpl__ServiceCampaign__c campaign,
+        Id campaignId,
         String objectType,
         String operation
     ) {
-        dmpl__ServiceCampaignRule__c rule = (dmpl__ServiceCampaignRule__c) TestFactory.createSObject(
+        return (dmpl__ServiceCampaignRule__c) TestFactory.createSObject(
             new dmpl__ServiceCampaignRule__c(
-                dmpl__ServiceCampaignId__c = campaign != null ? campaign.Id : null,
-                dmpl__ObjectType__c = objectType != null ? objectType : 'Account',
-                dmpl__Operation__c = operation != null ? operation : 'equals'
+                dmpl__ServiceCampaignId__c = campaignId,
+                dmpl__ObjectType__c = objectType,
+                dmpl__Operation__c = operation
             ),
             true
         );
-        return rule;
-    }
-
-    public static dmpl__ServiceCampaignRule__c getServiceCampaignRuleByName(String name) {
-        return [
-            SELECT Id, Name, dmpl__ServiceCampaignId__c, dmpl__ObjectType__c, dmpl__Operation__c
-            FROM dmpl__ServiceCampaignRule__c
-            WHERE Name = :name
-            LIMIT 1
-        ];
-    }
-
-    public static List<dmpl__ServiceCampaignRule__c> getRulesByCampaign(Id campaignId) {
-        return [
-            SELECT Id, Name, dmpl__ObjectType__c, dmpl__Operation__c
-            FROM dmpl__ServiceCampaignRule__c
-            WHERE dmpl__ServiceCampaignId__c = :campaignId
-        ];
     }
 }

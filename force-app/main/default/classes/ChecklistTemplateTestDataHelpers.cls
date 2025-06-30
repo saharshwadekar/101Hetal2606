@@ -39,6 +39,23 @@ public with sharing class ChecklistTemplateTestDataHelpers {
             true
         );
     }
+
+    public static dmpl__CheckListTemplateLine__c createChecklistTemplateLine(
+        dmpl__ChecklistTemplate__c checkListTemplate,
+        String name
+) {
+        return (dmpl__CheckListTemplateLine__c) TestFactory.createSObject(
+            new dmpl__CheckListTemplateLine__c(
+                                            dmpl__ChecklistTemplateId__c = checkListTemplate?.Id,
+                                            Name=name,
+                                            dmpl__DataType__c='Text',
+                                            dmpl__DefaultValue__c='DateValue1',
+                                            dmpl__GroupBy__c='Sample1'
+                                            ),
+            // 'CheckListTemplateLineDefaults',
+            true
+        );
+    }
     
     public static dmpl__CheckListTemplateLine__c getChecklistTemplateLine() {
         return [SELECT

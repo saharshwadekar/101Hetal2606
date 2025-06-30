@@ -8,7 +8,7 @@ public with sharing class CycleCountHandler_Test {
 
 		Test.startTest();
         Account partnerAccount1 = TestDataHelpers.createPartnerAccount('Partner 1', false, true, false, true, 'MG Road', 'Bengaluru', 'Karnataka', 'India', '560001', '56 Industrial Layout', 'Bengaluru', 'Karnataka', 'India', '560095','9876543210');
-        Account partnerAccount2 = TestDataHelpers.createPartnerAccount('Partner 2', false, true, false, true, '45 Residency Road', 'Pune', 'Maharashtra', 'India', '411001', '22 Commerce Avenue', 'Pune', 'Maharashtra', 'India', '411038','91-99665544433');
+        Account partnerAccount2 = TestDataHelpers.createPartnerAccount('Partner 2', false, true, false, false, '45 Residency Road', 'Pune', 'Maharashtra', 'India', '411001', '22 Commerce Avenue', 'Pune', 'Maharashtra', 'India', '411038','91-99665544433');
         Account partnerAccount3 = TestDataHelpers.createPartnerAccount('Partner 3', false, true, false, true, '78 Nehru Nagar Road', 'Chennai', 'Tamil Nadu', 'India', '600042', '78 Nehru Nagar Road', 'Chennai', 'Tamil Nadu', 'India', '600042', '91-9123456789');
         dmpl__Branch__c branch1=TestDataHelpers.createBranch('Branch 1', partnerAccount1.Id, true, true, false, true);
         dmpl__Branch__c branch3 = TestDataHelpers.createBranch('Branch 3', partnerAccount3.Id, false, true, true, false);
@@ -170,7 +170,7 @@ public with sharing class CycleCountHandler_Test {
 		dmpl__InventoryCycleCount__c cycleCount;
 		try{
 			cycleCount = CycleCountTestDataHelpers.createCycleCount(partner.Id, branch.Id, null, storageLocation.Id, null);
-			// System.Assert.isTrue(cycleCount == null, 'Expected the cycle count creation to fail As Wrong Storage Location tagged!');
+			//System.Assert.isTrue(cycleCount == null, 'Expected the cycle count creation to fail As Wrong Storage Location tagged!');
 		}catch(Exception e){
 			System.Assert.isTrue(cycleCount == null, 'Expected the cycle count creation to fail As Wrong Storage Location tagged');
 		}

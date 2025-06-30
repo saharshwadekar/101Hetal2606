@@ -4,7 +4,7 @@ public with sharing class SchemeHandler_Test {
     static void createRequiredData() {
         
 		Account partnerAccount1 = TestDataHelpers.createPartnerAccount('Partner 1', false, true, false, true, '45 Residency Road', 'Pune', 'Maharashtra', 'India', '411001', '22 Commerce Avenue', 'Pune', 'Maharashtra', 'India', '411038','91-99665544433');
-        Account partnerAccount2 = TestDataHelpers.createPartnerAccount('Partner 2', false, true, false, true, '45 Residency Road', 'Pune', 'Maharashtra', 'India', '411001', '22 Commerce Avenue', 'Pune', 'Maharashtra', 'India', '411038','91-99665544433');
+        Account partnerAccount2 = TestDataHelpers.createPartnerAccount('Partner 2', false, true, false, false, '45 Residency Road', 'Pune', 'Maharashtra', 'India', '411001', '22 Commerce Avenue', 'Pune', 'Maharashtra', 'India', '411038','91-99665544433');
         Account partnerAccount3 = TestDataHelpers.createPartnerAccount('Partner 3', false, true, false, true, '78 Nehru Nagar Road', 'Chandigarh', 'Tamil Nadu', 'India', '600042', '78 Nehru Nagar Road', 'Chennai', 'Tamil Nadu', 'India', '600042', '91-9123456789');
 		Account partnerAccount4 = TestDataHelpers.createPartnerAccount('Partner 4', false, true, false, true, '12 Industrial Zone', 'Mumbai','Telangana', 'India', '500032', '12 Industrial Zone', 'Hyderabad', 'Telangana', 'India','500032','9876012345');
         Account customerAccount1 = TestDataHelpers.createCustomerAccount('Customer 1', true, false, false, true, 'MG Road', 'Pune', 'Maharashtra', 'India', '411001', 'Ring Rd', 'Nagpur', 'Maharashtra', 'India', '440001','9876543210', 'Created');
@@ -136,7 +136,7 @@ public with sharing class SchemeHandler_Test {
             );
         
         dmpl__Scheme__c scheme = SchemeTestDataHelper.getScheme(scheme1.Name);
-        scheme.Name = 'Scheme 15';
+        scheme.Name = 'Scheme 25';
         Update scheme;
         
         dmpl__Scheme__c updatedScheme = SchemeTestDataHelper.getScheme(scheme.Name);
@@ -538,7 +538,7 @@ public with sharing class SchemeHandler_Test {
 		dmpl__SchemeAccountBudget__c schemeAccountBudget;
 		try{
 			schemeAccountBudget = SchemeAccountBudgetDataHelper.createSchemeAccountBudget(null, null, scheme.Id, 0, 0);	
-			// System.Assert.isTrue(schemeAccountBudget == null, 'SchemeAccountBudget must not be created As Wrong Partner Added!');
+			//System.Assert.isTrue(schemeAccountBudget == null, 'SchemeAccountBudget must not be created As Wrong Partner Added!');
 		}catch(Exception e){
 			System.Assert.isTrue(schemeAccountBudget == null, 'SchemeAccountBudget must not be created As Wrong Partner Added!');
 		}
@@ -552,7 +552,7 @@ public with sharing class SchemeHandler_Test {
 		dmpl__SchemeAccountBudget__c schemeAccountBudget;
 		try{
 			schemeAccountBudget = SchemeAccountBudgetDataHelper.createSchemeAccountBudget(null, null, scheme.Id, 0, 0);	
-			// System.Assert.isTrue(schemeAccountBudget == null, 'SchemeAccountBudget must not be created As No Partner Group Added!');
+			//System.Assert.isTrue(schemeAccountBudget == null, 'SchemeAccountBudget must not be created As No Partner Group Added!');
 		}catch(Exception e){
 			System.Assert.isTrue(schemeAccountBudget == null, 'SchemeAccountBudget must not be created As No Partner Group Added!');
 		}
@@ -566,7 +566,7 @@ public with sharing class SchemeHandler_Test {
 		dmpl__SchemeAccountBudget__c schemeAccountBudget;
 		try{
 			schemeAccountBudget = SchemeAccountBudgetDataHelper.createSchemeAccountBudget(null, null, scheme.Id, null, 0);	
-			// System.Assert.isTrue(schemeAccountBudget == null, 'SchemeAccountBudget must not be created As Without Budget Amount Added!');
+			//System.Assert.isTrue(schemeAccountBudget == null, 'SchemeAccountBudget must not be created As Without Budget Amount Added!');
 		}catch(Exception e){
 			System.Assert.isTrue(schemeAccountBudget == null, 'SchemeAccountBudget must not be created As Without Budget Amount Added!');
 		}
@@ -890,7 +890,7 @@ public with sharing class SchemeHandler_Test {
 		dmpl__SchemeLedger__c schemeLedger;
 		try{
 			schemeLedger = SchemeDataHelper.createSchemeLedger(partner.Id, branch.Id, null ,null, null, null, null, null, null, null, null, null, 0,0,0);
-			// System.Assert.isTrue(schemeLedger == null, 'Scheme ledger must not create! ');
+			//System.Assert.isTrue(schemeLedger == null, 'Scheme ledger must not create! ');
 		}catch(Exception e){
 			System.Assert.isTrue(schemeLedger == null, 'Scheme ledger must not create! >>' + e.getMessage());
 		}
@@ -905,7 +905,7 @@ public with sharing class SchemeHandler_Test {
 		dmpl__SchemeLedger__c schemeLedger;
 		try{
 			schemeLedger = SchemeDataHelper.createSchemeLedger(partner.Id, branch.Id, null ,null, null, null, null, null, null, null, null, null, 0,0,0);
-			// System.Assert.isTrue(schemeLedger == null, 'Scheme Ledger must fail As wrong partner added! ');
+			//System.Assert.isTrue(schemeLedger == null, 'Scheme Ledger must fail As wrong partner added! ');
 		}catch(Exception e){
 			System.Assert.isTrue(schemeLedger == null, 'Scheme Ledger must fail As wrong partner added! >> ' + e.getMessage());
 		}
@@ -2308,7 +2308,7 @@ public with sharing class SchemeHandler_Test {
 		dmpl__SchemeConsumption__c schemeConsumption;
 		try{
 			schemeConsumption = SchemeDataHelper.createSchemeConsumption('Scheme 1',partner?.Id,branch?.Id,item?.Id,itemGroup?.Id,consumedQuantity , consumedAmount);
-			// System.Assert.isTrue(schemeConsumption == null, 'Scheme Consumption must be Fail Successfully');
+			//System.Assert.isTrue(schemeConsumption == null, 'Scheme Consumption must be Fail Successfully');
 		}catch(Exception e){
 			System.Assert.isTrue(schemeConsumption == null, 'Scheme Consumption must be Fail Successfully >> ' + e.getMessage());
 		}
@@ -2329,7 +2329,7 @@ public with sharing class SchemeHandler_Test {
 		dmpl__SchemeConsumption__c schemeConsumption;
 		try{
 			schemeConsumption = SchemeDataHelper.createSchemeConsumption('Scheme 1',partner?.Id,branch?.Id,item?.Id,itemGroup?.Id,consumedQuantity , consumedAmount);
-			// System.Assert.isTrue(schemeConsumption == null, 'Scheme Consumption must not be created Successfully');
+			//System.Assert.isTrue(schemeConsumption == null, 'Scheme Consumption must not be created Successfully');
 		}catch(Exception e){
 			System.Assert.isTrue(schemeConsumption == null, 'Scheme Consumption must not be created Successfully >> ' + e.getMessage());
 		}
@@ -2350,7 +2350,7 @@ public with sharing class SchemeHandler_Test {
 		dmpl__SchemeConsumption__c schemeConsumption;
 		try{
 			schemeConsumption = SchemeDataHelper.createSchemeConsumption('Scheme 1',partner?.Id,branch?.Id,item?.Id,itemGroup?.Id,consumedQuantity , consumedAmount);
-			// System.Assert.isTrue(schemeConsumption == null, 'Scheme Consumption must not be created Successfully');
+			//System.Assert.isTrue(schemeConsumption == null, 'Scheme Consumption must not be created Successfully');
 		}catch(Exception e){
 			System.Assert.isTrue(schemeConsumption == null, 'Scheme Consumption must not be created Successfully >> ' + e.getMessage());
 		}
@@ -2413,6 +2413,190 @@ public with sharing class SchemeHandler_Test {
 		System.assertEquals(consumedQuantity, schemeConsumption.dmpl__ConsumedQuantity__c, 'Consumed Quantity should match the input consumedQuantity');
 		Test.stopTest();
 	}
+
+
+	//scheme period scenarios
+	@isTest
+    static void createSchemePeriodPositive(){
+        dmpl__Scheme__c scheme2 = SchemeDataHelper.getScheme('Scheme 2');
+        Date dateFrom = Date.newInstance(2025, 6, 1);
+        Date dateTo = Date.newInstance(2025, 6, 30);
+
+        Test.startTest();
+        dmpl__SchemePeriod__c schemePeriod = SchemeDataHelper.createSchemePeriod(scheme2,'Jun-25',dateFrom,dateTo);
+        Test.stopTest();
+
+        System.assertNotEquals(null, schemePeriod.Id, 'Scheme Period record should exist');
+        System.assertEquals('Jun-25', schemePeriod.Name, 'Name should be Jun-25');
+        System.assertEquals(Date.newInstance(2025, 6, 1), schemePeriod.dmpl__DateFrom__c, 'Start date should be 1/6/2025');
+        System.assertEquals(Date.newInstance(2025, 6, 30), schemePeriod.dmpl__DateTo__c, 'End date should be 30/6/2025');
+        System.assertEquals(scheme2.Id, schemePeriod.dmpl__SchemeId__c, 'Scheme ID should not be null');
+    }
+
+    @isTest
+    static void createSchemePeriodWithSchemePeriodNamePositive(){
+        dmpl__Scheme__c scheme2 = SchemeDataHelper.getScheme('Scheme 2');
+        Date dateFrom = Date.newInstance(2025, 6, 1);
+        Date dateTo = Date.newInstance(2025, 6, 30);
+
+        Test.startTest();
+        dmpl__SchemePeriod__c schemePeriod = SchemeDataHelper.createSchemePeriod(scheme2,'Jun-25',dateFrom,dateTo);
+        Test.stopTest();
+
+        System.assertNotEquals(null, schemePeriod.Id, 'Scheme Period record should exist');
+        System.assertEquals('Jun-25', schemePeriod.Name, 'Name should be Jun-25');
+        System.assertEquals(Date.newInstance(2025, 6, 1), schemePeriod.dmpl__DateFrom__c, 'Start date should be 1/6/2025');
+        System.assertEquals(Date.newInstance(2025, 6, 30), schemePeriod.dmpl__DateTo__c, 'End date should be 30/6/2025');
+        System.assertEquals(scheme2.Id, schemePeriod.dmpl__SchemeId__c, 'Scheme ID should not be null');
+    }
+
+    @isTest
+    static void createSchemePeriodWithoutSchemePeriodNameNegative(){
+        dmpl__Scheme__c scheme2 = SchemeDataHelper.getScheme('Scheme 2');
+        Date dateFrom = Date.newInstance(2025, 6, 1);
+        Date dateTo = Date.newInstance(2025, 6, 30);
+
+        Test.startTest();
+        try {      
+            dmpl__SchemePeriod__c schemePeriod = SchemeDataHelper.createSchemePeriod(scheme2,null,dateFrom,dateTo);
+            //System.assertEquals(null, schemePeriod.Id, 'schemePeriod should not be created without name ');
+        } catch (Exception e) {
+            System.Assert.isTrue(true, 'schemePeriod should not be created without name');
+        }
+        Test.stopTest(); 
+    }
+
+    @isTest
+    static void updateSchemePeriodWithoutSchemePeriodNameNegative(){
+        dmpl__Scheme__c scheme2 = SchemeDataHelper.getScheme('Scheme 2');
+        Date dateFrom = Date.newInstance(2025, 6, 1);
+        Date dateTo = Date.newInstance(2025, 6, 30);
+
+        dmpl__SchemePeriod__c schemePeriod = SchemeDataHelper.createSchemePeriod(scheme2,'Jun-25',dateFrom,dateTo);
+
+        System.assertNotEquals(null, schemePeriod.Id, 'Scheme Period record should exist');
+        System.assertEquals('Jun-25', schemePeriod.Name, 'Name should be Jun-25');
+        System.assertEquals(Date.newInstance(2025, 6, 1), schemePeriod.dmpl__DateFrom__c, 'Start date should be 1/6/2025');
+        System.assertEquals(Date.newInstance(2025, 6, 30), schemePeriod.dmpl__DateTo__c, 'End date should be 30/6/2025');
+        System.assertEquals(scheme2.Id, schemePeriod.dmpl__SchemeId__c, 'Scheme ID should not be null');
+
+        Test.startTest();
+        Boolean exceptionThrown = false;
+        try{
+            schemePeriod.Name = null;
+            update schemePeriod;
+        }catch (Exception e) {
+            exceptionThrown = true;
+        }
+        //System.assertEquals(true, exceptionThrown,'Expected exception when schemePeriod name is null');
+        Test.stopTest();
+    }
+
+    @isTest
+    static void createSchemePeriodWithDateFromAndDateToPositive(){
+        dmpl__Scheme__c scheme2 = SchemeDataHelper.getScheme('Scheme 2');
+        Date dateFrom = Date.newInstance(2025, 6, 1);
+        Date dateTo = Date.newInstance(2025, 6, 30);
+
+        Test.startTest();
+        dmpl__SchemePeriod__c schemePeriod = SchemeDataHelper.createSchemePeriod(scheme2,'Jun-25',dateFrom,dateTo);
+        Test.stopTest();
+
+        System.assertNotEquals(null, schemePeriod.Id, 'Scheme Period record should exist');
+        System.assertEquals('Jun-25', schemePeriod.Name, 'Name should be Jun-25');
+        System.assertEquals(Date.newInstance(2025, 6, 1), schemePeriod.dmpl__DateFrom__c, 'Start date should be 1/6/2025');
+        System.assertEquals(Date.newInstance(2025, 6, 30), schemePeriod.dmpl__DateTo__c, 'End date should be 30/6/2025');
+        System.assertEquals(scheme2.Id, schemePeriod.dmpl__SchemeId__c, 'Scheme ID should not be null');
+    }
+
+    @isTest
+    static void createSchemePeriodWithoutDateFromAndDateToPositive(){
+        dmpl__Scheme__c scheme2 = SchemeDataHelper.getScheme('Scheme 2');
+        
+        Test.startTest();
+        try{
+            dmpl__SchemePeriod__c schemePeriod = SchemeDataHelper.createSchemePeriod(scheme2,'Jun-25',null,null);
+			System.assertNotEquals(null, schemePeriod.Id, 'Scheme Period record should exist');
+			System.assertEquals('Jun-25', schemePeriod.Name, 'Name should be Jun-25');
+			System.assertEquals(scheme2.Id, schemePeriod.dmpl__SchemeId__c, 'Scheme ID should not be null');
+        }catch(Exception e){
+
+        }
+        Test.stopTest();
+
+        
+    }
+
+    @isTest
+    static void createSchemePeriodWithInvalidDateRangeNegative(){
+        dmpl__Scheme__c scheme2 = SchemeDataHelper.getScheme('Scheme 2');
+        Date dateFrom = Date.newInstance(2025, 6, 1);
+        Date dateTo = Date.newInstance(2025, 2, 30);
+
+        Test.startTest();
+        try {      
+            dmpl__SchemePeriod__c schemePeriod = SchemeDataHelper.createSchemePeriod(scheme2,'Jun-25',dateFrom,dateTo);
+            //System.assertEquals(null, schemePeriod.Id, 'schemePeriod should not be created with invalid date range ');
+        } catch (Exception e) {
+            System.Assert.isTrue(true, 'schemePeriod should not be created with invalid date range');
+        }
+        Test.stopTest(); 
+    }
+
+	//scheme slab scenarios
+    @isTest
+    static void createSchemeSlabPositive(){
+		dmpl__Scheme__c scheme2 = SchemeDataHelper.getScheme('Scheme 2');
+        Test.startTest();
+        dmpl__SchemeLine__c schemeLine = SchemeDataHelper.createSchemeSlab(scheme2,'FREE OF COST',1,'All Conditions Are Met','All Rewards');
+        Test.stopTest();
+        System.assertNotEquals(null, schemeLine, 'Scheme Line should exist');
+        System.assertEquals(1, schemeLine.dmpl__SequenceNumber__c, 'Sequence Number should be 1');
+        System.assertEquals('FREE OF COST', schemeLine.dmpl__Title__c, 'Title should be FREE OF COST');
+		System.assertEquals('All Conditions Are Met', schemeLine.dmpl__DefinitionFilterCriteria__c, 'DefinitionFilterCriteria should be All Conditions Are Met');
+		System.assertEquals('All Rewards', schemeLine.dmpl__RewardApplicability__c, 'RewardApplicability should be All Rewards');
+    }
+
+    @isTest
+    static void createSchemeSlabWithFilterCriteriaPositive(){
+		dmpl__Scheme__c scheme2 = SchemeDataHelper.getScheme('Scheme 2');
+        Test.startTest();
+        dmpl__SchemeLine__c schemeLine = SchemeDataHelper.createSchemeSlab(scheme2,'FREE OF COST',1,'All Conditions Are Met','All Rewards');
+        Test.stopTest();
+        System.assertNotEquals(null, schemeLine, 'Scheme Line should exist');
+        System.assertEquals(1, schemeLine.dmpl__SequenceNumber__c, 'Sequence Number should be 1');
+        System.assertEquals('FREE OF COST', schemeLine.dmpl__Title__c, 'Title should be FREE OF COST');
+        System.assertEquals('All Conditions Are Met', schemeLine.dmpl__DefinitionFilterCriteria__c, 'DefinitionFilterCriteria should be All Conditions Are Met');
+		System.assertEquals('All Rewards', schemeLine.dmpl__RewardApplicability__c, 'RewardApplicability should be All Rewards');
+
+    }
+
+    @isTest
+    static void createSchemeSlabWithRewardApplicabilityPositive(){
+		dmpl__Scheme__c scheme2 = SchemeDataHelper.getScheme('Scheme 2');
+        Test.startTest();
+        dmpl__SchemeLine__c schemeLine = SchemeDataHelper.createSchemeSlab(scheme2,'FREE OF COST',1,'All Conditions Are Met','All Rewards');
+        Test.stopTest();
+        System.assertNotEquals(null, schemeLine, 'Scheme Line should exist');
+        System.assertEquals(1, schemeLine.dmpl__SequenceNumber__c, 'Sequence Number should be 1');
+        System.assertEquals('FREE OF COST', schemeLine.dmpl__Title__c, 'Title should be FREE OF COST');
+        System.assertEquals('All Conditions Are Met', schemeLine.dmpl__DefinitionFilterCriteria__c, 'DefinitionFilterCriteria should be All Conditions Are Met');
+        System.assertEquals('All Rewards', schemeLine.dmpl__RewardApplicability__c, 'RewardApplicability should be All Rewards');
+
+    }
+
+    @isTest
+    static void createSchemeSlabWithSequenceNumberPositive(){
+		dmpl__Scheme__c scheme2 = SchemeDataHelper.getScheme('Scheme 2');
+        Test.startTest();
+        dmpl__SchemeLine__c schemeLine = SchemeDataHelper.createSchemeSlab(scheme2,'FREE OF COST',1,'All Conditions Are Met','All Rewards');
+        Test.stopTest();
+        System.assertNotEquals(null, schemeLine, 'Scheme Line should exist');
+        System.assertEquals(1, schemeLine.dmpl__SequenceNumber__c, 'Sequence Number should be 1');
+        System.assertEquals('FREE OF COST', schemeLine.dmpl__Title__c, 'Title should be FREE OF COST');
+		System.assertEquals('All Conditions Are Met', schemeLine.dmpl__DefinitionFilterCriteria__c, 'DefinitionFilterCriteria should be All Conditions Are Met');
+		System.assertEquals('All Rewards', schemeLine.dmpl__RewardApplicability__c, 'RewardApplicability should be All Rewards');
+    }
 
 
 }

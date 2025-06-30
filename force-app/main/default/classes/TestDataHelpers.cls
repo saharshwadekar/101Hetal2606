@@ -87,6 +87,34 @@ public class TestDataHelpers {
             true
         );
     }
+
+     public static dmpl__Branch__c createBranch(
+        String name,    
+        Id partnerAccountId,
+        Boolean isActive,
+        Boolean allowService,
+        Boolean isHomeDeliveryAvailable,
+        Boolean isPickupDropAvailable,
+        Boolean allowSales,
+        Boolean allowPurchase,
+        Boolean allowInventory
+        
+    ) {
+        return (dmpl__Branch__c) TestFactory.createSObject(
+            new dmpl__Branch__c(
+                Name = name,
+                dmpl__PartnerAccountId__c = partnerAccountId != null ? partnerAccountId : null,
+                dmpl__IsActive__c = isActive,
+                dmpl__AllowService__c = allowService,
+                dmpl__IsHomeDeliveryAvailable__c = isHomeDeliveryAvailable,
+                dmpl__IsPickupDropAvailable__c = isPickupDropAvailable,
+                dmpl__AllowSales__c = allowSales,
+                dmpl__AllowPurchase__c = allowPurchase,
+                dmpl__AllowInventory__c = allowInventory
+            ),
+            true
+        );
+    }
  
     /**
      * @description      Gets an Branch object
@@ -1034,7 +1062,10 @@ public class TestDataHelpers {
                 dmpl__IsActive__c,
                 dmpl__AllowSales__c,
                 dmpl__AllowPurchase__c,
-                dmpl__AllowInventory__c
+                dmpl__AllowInventory__c,
+                dmpl__IsHomeDeliveryAvailable__c,
+                dmpl__IsPickupDropAvailable__c,
+                dmpl__AllowService__c
             FROM dmpl__Branch__c
             WHERE Name = :name
             LIMIT 1
@@ -1062,7 +1093,7 @@ public class TestDataHelpers {
                 dmpl__IsCustomerAccount__c = false,
                 dmpl__IsPartnerAccount__c = false,
                 dmpl__IsSupplierAccount__c = true,
-                dmpl__IsActive__c = false,
+                dmpl__IsActive__c = true,
                 dmpl__BillingStreet__c = billingStreet,
                 dmpl__BillingCity__c = billingCity,
                 dmpl__BillingState__c = billingState,

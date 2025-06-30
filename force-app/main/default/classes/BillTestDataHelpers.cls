@@ -73,6 +73,22 @@ public with sharing class BillTestDataHelpers {
                         );
     }
 
+    public static dmpl__Bill__c createBill(
+        Id supplierAccountId,
+        Id branchId,
+        Id partnerAccountId 
+    ){
+        return (dmpl__Bill__c)TestFactory.createSObject(
+        new dmpl__Bill__c(
+            dmpl__PartnerAccountId__c =   partnerAccountId,
+            dmpl__BranchId__c = branchId,
+            dmpl__SupplierAccountId__c = supplierAccountId
+            ),
+            //'BillDefaults',
+            true       
+        );
+    }
+
     public static dmpl__BillLine__c createBillLine(
         Account customerAccount,
         dmpl__Item__c item,
@@ -98,6 +114,20 @@ public with sharing class BillTestDataHelpers {
                                 'BillLineDefaults',
                                 true
                             );
+    }
+
+    public static dmpl__BillLine__c createBillLine(
+        dmpl__Item__c item,
+        Decimal quantity
+    ) {
+        return (dmpl__BillLine__c)TestFactory.createSObject(
+            new dmpl__BillLine__c(
+                dmpl__ItemId__c = item.Id,
+                dmpl__Quantity__c = quantity
+                ),
+            //'BillLineDefaults',
+            true
+        );
     }
 
     public static dmpl__BillLine__c getBillLine(){

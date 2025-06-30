@@ -54,11 +54,11 @@ public with sharing class MessageDataHelper {
         ];
     }
 
-    public static List<dmpl__MessageConfiguration__c> getMessageConfigurationsByIds(List<Id> mcIds) {
-        return [
-            SELECT Id FROM dmpl__MessageConfiguration__c WHERE Id IN :mcIds
-        ];
-    }
+     public static List<dmpl__MessageConfiguration__c> getMessageConfigurationsByIds(Id mcId) {
+         return [
+             SELECT Id FROM dmpl__MessageConfiguration__c WHERE Id =:mcId
+         ];
+     }
 
     public static dmpl__MessageRule__c createMessageRule() {
         dmpl__MessageConfiguration__c config = createMessageConfiguration();
@@ -112,11 +112,11 @@ public with sharing class MessageDataHelper {
         ];
     }
 
-    public static List<dmpl__MessageRule__c> getMessageRulesById(Id ruleId) {
-        return [
-            SELECT Id FROM dmpl__MessageRule__c WHERE Id = :ruleId
-        ];
-    }
+     public static List<dmpl__MessageRule__c> getMessageRulesById(Id ruleId) {
+         return [
+             SELECT Id FROM dmpl__MessageRule__c WHERE Id = :ruleId
+         ];
+     }
 
     public static dmpl__Message__c createDefaultMessage() {
         return (dmpl__Message__c) TestFactory.createSObject(

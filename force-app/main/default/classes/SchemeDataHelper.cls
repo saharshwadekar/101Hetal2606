@@ -115,6 +115,45 @@ public with sharing class SchemeDataHelper {
             true
         );
     }
+    public static dmpl__SchemeLine__c createSchemeSlab(
+        dmpl__Scheme__c scheme,
+        String title,
+        Decimal seqNum,
+        String filterCriteria,
+        String rewardApplicability
+    ) {
+        return (dmpl__SchemeLine__c) TestFactory.createSObject(
+            new dmpl__SchemeLine__c(
+                dmpl__SchemeId__c = scheme != null ? scheme.Id : null,
+                dmpl__Title__c = title != null ? title : null,
+                dmpl__SequenceNumber__c = seqNum != null ? seqNum : null,
+                dmpl__DefinitionFilterCriteria__c = filterCriteria != null ? filterCriteria : null,
+                dmpl__RewardApplicability__c = rewardApplicability != null ? rewardApplicability : null
+
+            ),
+            //'SchemeSlabDefaults',
+            true
+        );
+    }
+
+    public static dmpl__SchemePeriod__c createSchemePeriod(
+        dmpl__Scheme__c scheme,
+        String schemePeriodName,
+        Date dateFrom,
+        Date dateTo
+    ) {
+        return (dmpl__SchemePeriod__c) TestFactory.createSObject(
+            new dmpl__SchemePeriod__c(
+                dmpl__SchemeId__c = scheme != null ? scheme.Id : null,
+                Name = schemePeriodName != null ? schemePeriodName : null,
+                dmpl__DateFrom__c = dateFrom != null ? dateFrom : null,
+                dmpl__DateTo__c = dateTo != null ? dateTo : null
+
+            ),
+            //'SchemePeriodDefaults',
+            true
+        );
+    }
 
     public static dmpl__SchemeLine__c getSchemeLine(Id schemeId) {
         return [

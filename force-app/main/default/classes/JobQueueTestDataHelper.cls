@@ -24,7 +24,8 @@ public with sharing class JobQueueTestDataHelper {
             new dmpl__InterfaceQueue__c(
                 dmpl__JobType__c = jobType,
                 dmpl__QueueType__c = queueType,
-                dmpl__CronExpression__c = queueType=='Schedulable'?'0 0 1 * *?':null,
+                dmpl__CronExpression__c = queueType=='Schedulable'?'0 0 1 * * ?':null,
+                dmpl__SchedulableJobName__c = queueType=='Schedulable'?'Test':null,
                 dmpl__RetryCount__c = retryCount,
                 //dmpl__AttemptCount__c = attemptCount,
                 dmpl__InterfaceProviderId__c = interfaceServiceProvider?.Id,

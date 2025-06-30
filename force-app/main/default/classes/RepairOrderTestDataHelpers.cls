@@ -82,6 +82,8 @@ public class RepairOrderTestDataHelpers {
         );
     }
 
+    
+
     public static dmpl__RepairOrderLine__c createRepairOrderLine(dmpl__RepairOrder__c repairOrder,
     dmpl__Item__c item,
     dmpl__SKU__c sku, 
@@ -116,7 +118,7 @@ public class RepairOrderTestDataHelpers {
         );
     }
 
-     public static dmpl__RepairOrderTimeSheet__c createTimeSheet(dmpl__RepairOrder__c repairOrder) {
+    public static dmpl__RepairOrderTimeSheet__c createTimeSheet(dmpl__RepairOrder__c repairOrder) {
         return (dmpl__RepairOrderTimeSheet__c)TestFactory.createSObject(
             new dmpl__RepairOrderTimeSheet__c(
                 dmpl__RepairOrderId__c = repairOrder.Id,
@@ -357,7 +359,7 @@ public class RepairOrderTestDataHelpers {
                 dmpl__DocumentDate__c = Date.today(),
                 dmpl__Status__c = 'Draft'
             ),
-            'RepairOrderDefaults',
+            //'RepairOrderDefaults',
             true
         );
     }
@@ -377,7 +379,7 @@ public class RepairOrderTestDataHelpers {
                 dmpl__Quantity__c = quantity,
                 dmpl__UnitPrice__c = unitPrice
             ),
-            'RepairOrderLineDefaults',
+            //'RepairOrderLineDefaults',
             true
         );
     }
@@ -387,6 +389,8 @@ public class RepairOrderTestDataHelpers {
             Id,
             Name,
             dmpl__RepairOrderId__c ,
+            dmpl__AssetServiceContractId__c,
+            dmpl__ItemServiceContractId__c,
                 dmpl__ItemId__c ,
                 dmpl__TaxGroupId__c ,
                 dmpl__Quantity__c ,dmpl__QuoteLineId__c,
@@ -413,7 +417,7 @@ public class RepairOrderTestDataHelpers {
                 dmpl__Quantity__c = quantity,
                 dmpl__UnitPrice__c = unitPrice
             ),
-            'RepairOrderLineDefaults',
+            //'RepairOrderLineDefaults',
             true
         );
     }
@@ -435,10 +439,11 @@ public class RepairOrderTestDataHelpers {
                 dmpl__Quantity__c = quantity,
                 dmpl__UnitPrice__c = unitPrice
             ),
-            'RepairOrderLineDefaults',
+            //'RepairOrderLineDefaults',
             true
         );
     }
+    
     public static dmpl__AssetServiceContract__c getAssetServiceContract(){
         return [SELECT
         Id,
@@ -467,10 +472,173 @@ public class RepairOrderTestDataHelpers {
                 dmpl__Quantity__c = quantity,
                 dmpl__UnitPrice__c = unitPrice
             ),
-            'RepairOrderLineDefaults',
+            //'RepairOrderLineDefaults',
             true
         );
     }
+
+
+    public static dmpl__RepairOrderTax__c createRepairOrderTax(
+        dmpl__RepairOrder__c repairOrder,
+        dmpl__RepairOrderLine__c repairOrderLine,
+        dmpl__TaxGroup__c taxGroup,
+        String taxName,
+        Decimal taxRate
+    ) {
+        return (dmpl__RepairOrderTax__c) TestFactory.createSObject(
+            new dmpl__RepairOrderTax__c(
+                dmpl__RepairOrderId__c     = repairOrder.Id,
+                dmpl__RepairOrderLineId__c = repairOrderLine.Id,
+                dmpl__TaxGroupId__c        = taxGroup.Id,
+                dmpl__TaxName__c           = taxName,
+                dmpl__TaxRate__c           = taxRate
+            ),
+            true
+        );
+    }
+
+    public static dmpl__RepairOrderTax__c createRepairOrderTaxWithoutRepairOrderLineReference(dmpl__RepairOrder__c repairOrder,
+        dmpl__TaxGroup__c taxGroup,
+        String taxName,
+        Decimal taxRate){
+
+
+            return (dmpl__RepairOrderTax__c) TestFactory.createSObject(
+            new dmpl__RepairOrderTax__c(
+                dmpl__RepairOrderId__c     = repairOrder.Id,
+                dmpl__TaxGroupId__c        = taxGroup.Id,
+                dmpl__TaxName__c           = taxName,
+                dmpl__TaxRate__c           = taxRate
+            ),
+            true
+        );
+        }
+
+    public static dmpl__RepairOrderTax__c getRepairOrderTaxesById(Id TaxId) {
+        return [
+            SELECT
+                Id,
+                Name,
+                dmpl__RepairOrderId__c,
+                dmpl__RepairOrderLineId__c,
+                dmpl__TaxGroupId__c,
+                dmpl__TaxName__c,
+                dmpl__TaxRate__c,
+                dmpl__TaxId__c
+            FROM dmpl__RepairOrderTax__c
+            WHERE Id = :TaxId
+            LIMIT 1
+        ];
+    }
+
+    public static dmpl__RepairOrderTimeSheet__c createRepairOrderTimeSheet(
+        dmpl__RepairOrder__c repairOrder,
+        dmpl__RepairOrderLine__c repairOrderLine
+    ) {
+        return (dmpl__RepairOrderTimeSheet__c) TestFactory.createSObject(
+            new dmpl__RepairOrderTimeSheet__c(
+                dmpl__RepairOrderId__c = repairOrder.Id,
+                dmpl__RepairOrderLine__c = repairOrderLine.Id,
+                dmpl__WorkStarted__c = false,
+                dmpl__WorkPaused__c = false,
+                dmpl__WorkEnded__c = false
+            ),
+            true
+        );
+    }
+
+    public static dmpl__RepairOrderTimeSheetLine__c createRepairOrderTimeSheetLine(
+        dmpl__RepairOrderLine__c repairOrderLine,
+        Id timeSheetId
+    ) {
+        return (dmpl__RepairOrderTimeSheetLine__c) TestFactory.createSObject(
+            new dmpl__RepairOrderTimeSheetLine__c(
+                dmpl__RepairOrderLineId__c = repairOrderLine.Id,
+                dmpl__RepairOrderTimeSheetId__c = timeSheetId
+            ),
+            true
+        );
+    }
+    public static dmpl__RepairOrderTimeSheet__c getRepairOrderTimeSheetById(Id timeSheetId) {
+        return [SELECT 
+            Id,
+            Name,
+            dmpl__RepairOrderId__c,
+            dmpl__RepairOrderLine__c,
+            dmpl__WorkStarted__c,
+            dmpl__WorkPaused__c,
+            dmpl__WorkEnded__c
+        FROM dmpl__RepairOrderTimeSheet__c
+        WHERE Id = :timeSheetId
+        LIMIT 1];
+    }
+
+    public static dmpl__RepairOrderTimeSheetLine__c getRepairOrderTimeSheetLineById(Id timeSheetLineId) {
+        return [SELECT 
+            Id,
+            Name,
+            dmpl__RepairOrderLineId__c,
+            dmpl__ActualDurationHours__c
+        FROM dmpl__RepairOrderTimeSheetLine__c
+        WHERE Id = :timeSheetLineId
+        LIMIT 1];
+    }
+    public static dmpl__RepairOrder__c createRepairOrderwithUsageReading(
+    Account partnerAccount,
+    dmpl__Branch__c branch,
+    Account account,
+    Decimal usageReading,
+    Asset asset,
+    dmpl__TaxGroup__c taxGroup,
+    dmpl__ContactAddress__c billingAddress,
+    dmpl__ContactAddress__c shippingAddress
+) {
+    return (dmpl__RepairOrder__c) TestFactory.createSObject(
+        new dmpl__RepairOrder__c(
+            dmpl__PartnerAccountId__c = partnerAccount.Id,
+            dmpl__BranchId__c = branch?.Id,
+            dmpl__AccountId__c = account?.Id,
+            dmpl__UsageReading__c = usageReading,
+            dmpl__AssetId__c = asset?.Id,
+            dmpl__TaxGroupId__c = taxGroup?.Id,
+            dmpl__BillingAddressId__c = billingAddress?.Id,
+            dmpl__ShippingAddressId__c = shippingAddress?.Id,
+            dmpl__DocumentDate__c = Date.today(), 
+            dmpl__Status__c = 'Draft'
+        ),
+        'RepairOrderDefaults',
+        true
+    );
+}
+public static dmpl__RepairOrder__c getRepairOrderById(Id repairOrderId) {
+    return [
+        SELECT
+            Id,
+            dmpl__PartnerAccountId__c,
+            dmpl__BranchId__c,
+            dmpl__AccountId__c,
+            dmpl__UsageReading__c,
+            dmpl__BillingAddress__c,
+            dmpl__BillingCity__c,
+            dmpl__BillingState__c,
+            dmpl__BillingStreet__c,
+            dmpl__BillingPostalCode__c,
+            dmpl__DocumentDate__c,
+            dmpl__ShippingAddress__c,
+            dmpl__ShippingCity__c,
+            dmpl__ShippingCountry__c,
+            dmpl__ShippingPostalCode__c,
+            dmpl__ShippingState__c,
+            dmpl__ShippingStreet__c,
+            dmpl__TaxGroupId__c,
+            dmpl__Status__c
+        FROM dmpl__RepairOrder__c
+        WHERE Id = :repairOrderId
+        LIMIT 1
+    ];
+}
+
+
 
 
 }

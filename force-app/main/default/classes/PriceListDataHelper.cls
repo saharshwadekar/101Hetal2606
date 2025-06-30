@@ -36,7 +36,6 @@ public with sharing class PriceListDataHelper {
                 dmpl__PartnerAccountGroupId__c = null,
                 dmpl__SequenceNumber__c = 1
             ),
-            'PriceListDefaults',
             true
         );
     }

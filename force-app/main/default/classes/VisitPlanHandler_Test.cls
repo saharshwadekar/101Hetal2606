@@ -95,4 +95,112 @@ private class VisitPlanHandler_Test {
         System.assertEquals(11,updatedTaskActivity.dmpl__SequenceNumber__c, 'Expected Sequence no. to be 11.');
         System.assertEquals(true,updatedTaskActivity.dmpl__PerformAutomatically__c, 'Expected Perform Automatically to be true.');
     }
+
+    @isTest
+    static void createVisitPlanWithActiveData() {
+        Test.startTest();
+        dmpl__VisitPlan__c plan = VisitPlanTestDataHelpers.createVisitPlan(
+            'Partner Active', true,
+            'Test Plan', 'Order Capture',
+            'Branch Active', true,
+            Date.today()
+        );
+        Test.stopTest();
+
+        System.assertNotEquals(null, plan, 'Visit Plan should be created.');
+    }
+
+    @isTest
+    static void createVisitPlanWithInactivePartnerNegative() {
+        try {
+            dmpl__VisitPlan__c plan = VisitPlanTestDataHelpers.createVisitPlan(
+                'Partner Inactive', false,
+                'Test Plan', 'Order Capture',
+                'Branch Active', true,
+                Date.today()
+            );
+            System.assert(false, 'Visit Plan creation should fail for inactive partner.');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('inactive'), 'Expected error for inactive partner.');
+        }
+    }
+
+    @isTest
+    static void createVisitPlanWithInvalidBranchNegative() {
+        try {
+            dmpl__VisitPlan__c plan = VisitPlanTestDataHelpers.createVisitPlan(
+                'Partner Active', true,
+                'Test Plan', 'Order Capture',
+                'Branch Invalid', false,
+                Date.today()
+            );
+            System.assert(false, 'Visit Plan creation should fail for invalid branch.');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains('invalid'), 'Expected error for invalid branch.');
+        }
+    }
+
+    @isTest
+    static void createVisitPlanWithActiveBranchPositive() {
+        Test.startTest();
+        dmpl__VisitPlan__c plan = VisitPlanTestDataHelpers.createVisitPlan(
+            'Partner 6', true,
+            'Test Plan', 'Order Capture',
+            'Branch 6', true,
+            Date.today()
+        );
+        Test.stopTest();
+
+        System.assertNotEquals(null, plan, 'Visit Plan should be created.');
+        System.assertEquals('Partner 6', plan.dmpl__PartnerAccountId__r.Name, 'Partner Account should match.');
+        System.assertEquals('Test Plan', plan.Name, 'Plan Name should match.');
+        System.assertEquals('Order Capture', plan.dmpl__VisitPurpose__c, 'Visit Purpose should match.');
+        System.assertEquals('Branch 6', plan.dmpl__BranchId__r.Name, 'Branch should match.');
+        System.assertEquals(Date.today(), plan.dmpl__PlanStartDate__c, 'Plan Start Date should be today.');
+    }
+
+    @isTest
+    static void createVisitPlanWithInactiveBranchPositive() {
+        Test.startTest();
+        dmpl__VisitPlan__c plan = VisitPlanTestDataHelpers.createVisitPlan(
+            'Partner 3', true,
+            'Test Plan', 'Order Capture',
+            'Branch 3', false,
+            Date.today()
+        );
+        Test.stopTest();
+
+        System.assertNotEquals(null, plan, 'Visit Plan should be created.');
+        System.assertEquals('Partner 3', plan.dmpl__PartnerAccountId__r.Name, 'Partner Account should match.');
+        System.assertEquals('Test Plan', plan.Name, 'Plan Name should match.');
+        System.assertEquals('Order Capture', plan.dmpl__VisitPurpose__c, 'Visit Purpose should match.');
+        System.assertEquals('Branch 3', plan.dmpl__BranchId__r.Name, 'Branch should match.');
+        System.assertEquals(Date.today(), plan.dmpl__PlanStartDate__c, 'Plan Start Date should be today.');
+    }
+
+    @isTest
+    static void createVisitPlanWithPlanNamePositive() {
+        Test.startTest();
+        dmpl__VisitPlan__c plan = VisitPlanTestDataHelpers.createVisitPlan(
+            'Partner 1', true,
+            'Test Plan', 'Order Capture',
+            'Branch 1', true,
+            Date.today()
+        );
+        Test.stopTest();
+
+        System.assertNotEquals(null, plan, 'Visit Plan should be created.');
+        System.assertEquals('Partner 1', plan.dmpl__PartnerAccountId__r.Name, 'Partner Account should match.');
+        System.assertEquals('Test Plan', plan.Name, 'Plan Name should match.');
+        System.assertEquals('Order Capture', plan.dmpl__VisitPurpose__c, 'Visit Purpose should match.');
+        System.assertEquals('Branch 1', plan.dmpl__BranchId__r.Name, 'Branch should match.');
+        System.assertEquals(Date.today(), plan.dmpl__PlanStartDate__c, 'Plan Start Date should be today.');
+    }
+
+
+
+
+
+
+
 }

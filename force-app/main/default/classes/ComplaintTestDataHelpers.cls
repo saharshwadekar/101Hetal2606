@@ -189,9 +189,9 @@ public static dmpl__ComplaintFault__c getComplaintFault() {
     public static dmpl__RepairOrder__c createRepairOrder(
         dmpl__Item__c item,
         dmpl__branch__c branch,
-        Asset asset,
-        dmpl__QuoteLine__c quoteLine,
-        dmpl__Quote__c serviceEstimate,
+        //Asset asset,
+        //dmpl__QuoteLine__c quoteLine,
+        //dmpl__Quote__c serviceEstimate,
         Account customerAccount
        ) {
        
@@ -199,14 +199,14 @@ public static dmpl__ComplaintFault__c getComplaintFault() {
             new dmpl__RepairOrder__c (
             dmpl__BranchId__c = branch.Id,
             dmpl__AccountId__c = customerAccount.Id,
-            dmpl__PartnerAccountId__c = branch.dmpl__PartnerAccountId__c,
-            dmpl__ServiceEstimateId__c = serviceEstimate.Id,
-            dmpl__UsageReading__c = 65.00,
-            dmpl__ServiceContractItemId__c=quoteLine.dmpl__ServiceContractId__c,
-            dmpl__ResetUsageReading__c = false,
-            dmpl__ResetUsageHours__c = false
+            dmpl__PartnerAccountId__c = branch.dmpl__PartnerAccountId__c
+            //dmpl__ServiceEstimateId__c = serviceEstimate.Id,
+            //dmpl__UsageReading__c = 65.00,
+            //dmpl__ServiceContractItemId__c=quoteLine.dmpl__ServiceContractId__c,
+            //dmpl__ResetUsageReading__c = false,
+            //dmpl__ResetUsageHours__c = false
         ),
-            'RepairOrderDefaults',
+            //'RepairOrderDefaults',
             true
         );
     }
@@ -248,10 +248,12 @@ public static dmpl__ComplaintFault__c getComplaintFault() {
         ];
     }
 
-    public static dmpl__Quote__c createQuote(Account customer) {
+    public static dmpl__Quote__c createQuote(Account customer, dmpl__Branch__c branch) {
         return (dmpl__Quote__c) TestFactory.createSObject(
             new dmpl__Quote__c(
                 dmpl__AccountId__c = customer != null ? customer.Id : null,
+                dmpl__PartnerAccountId__c = branch.dmpl__PartnerAccountId__c,
+                dmpl__BranchId__c = branch.Id, 
                 dmpl__DocumentDate__c = Date.today()
             ),
             'QuoteDefaults',
@@ -313,6 +315,38 @@ public static dmpl__ComplaintFault__c getComplaintFault() {
             SELECT Id, name, AccountId, dmpl__ItemId__c, dmpl__SaleDate__c 
 				FROM Asset 
 				WHERE name = :name LIMIT 1
+        ];
+    }
+
+    public static dmpl__Resource__c createResource(
+        String name,
+        Id defaultPartnerAccountId,
+        Id defaultBranchId,
+        Boolean isActive
+    ) {
+        return (dmpl__Resource__c) TestFactory.createSObject(
+            new dmpl__Resource__c(
+                Name = name,
+                dmpl__DefaultPartnerAccountId__c = defaultPartnerAccountId,
+                dmpl__DefaultBranchId__c = defaultBranchId,
+                dmpl__IsActive__c = isActive
+            ),
+            'ResourceDefaults',
+            true
+        );
+    }
+ 
+    public static dmpl__Resource__c getResource(String name) {
+        return [
+            SELECT
+            Id,
+            Name,
+            dmpl__DefaultPartnerAccountId__c,
+            dmpl__DefaultBranchId__c,
+            dmpl__IsActive__c
+            FROM dmpl__Resource__c
+            WHERE Name = :name
+            LIMIT 1
         ];
     }
 }

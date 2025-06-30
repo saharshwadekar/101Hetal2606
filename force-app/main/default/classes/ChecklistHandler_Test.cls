@@ -2,7 +2,7 @@
 public with sharing class ChecklistHandler_Test {
     @TestSetup
     static void createRequiredData() {
-         String checklistTemplateName = 'Test Checklist Template';
+        String checklistTemplateName = 'Test Checklist Template';
         dmpl__ChecklistTemplate__c checklistTemplate = ChecklistDataHelper.createChecklistTemplate(checklistTemplateName);
         String checklistTemplateLineName = 'Test Checklist Template Line';
         dmpl__ChecklistTemplateLine__c checklistTemplateLine = ChecklistDataHelper.createChecklistTemplateLine(checklistTemplateLineName, checklistTemplate.Id);
@@ -92,8 +92,11 @@ public with sharing class ChecklistHandler_Test {
         dmpl__CheckListLines__c deletedLines = ChecklistDataHelper.getChecklistLineById(setupChecklistLine.Id);
         System.assertEquals(deletedLines, null, 'Checklist line should be deleted.');
     }
-    
-  @isTest
+
+
+    //New
+
+    @isTest
     static void checklistTemplateCreationWithItem(){
 
         dmpl__Item__c item = TestDataHelpers.getItem('Item 1');
@@ -340,7 +343,38 @@ public with sharing class ChecklistHandler_Test {
         
         
     }
-     @isTest
+
+
+    //blocked
+    @isTest
+    static void createChecklistTemplateWithoutNameNegative() {
+
+        dmpl__Item__c item = TestDataHelpers.getItem('Item 1');
+        dmpl__ChecklistTemplate__c parentChecklist = ChecklistDataHelper.getChecklistTemplateByName('Checklist 1');
+
+        dmpl__ChecklistTemplate__c Checklisttemplate = ChecklistDataHelper.createChecklistTemplate(
+            null,
+            item.Id,
+            'Delivery',
+            parentChecklist.Id,
+            '1'
+        );
+
+        Test.startTest();
+        Boolean isException = false;
+        try {
+            insert Checklisttemplate;
+        } catch (DmlException e) {
+            isException = true;
+            System.assert(e.getMessage().contains('Name'), 'Expected validation error related to Name');
+        }
+        Test.stopTest();
+
+        System.assertEquals(true, isException, 'Checklist Template creation should fail when Name is missing');
+    }
+
+
+    @isTest
     static void createChecklistTemplateCreationWithoutCodePositive() {
 
         dmpl__Item__c item = TestDataHelpers.getItem('Item 1');
@@ -576,6 +610,10 @@ public with sharing class ChecklistHandler_Test {
             '1'
         );
 
+        Test.startTest();
+        insert checklistTemplateLine;
+        Test.stopTest();
+
         dmpl__ChecklistTemplateLine__c insertedChecklistTemplateLine = ChecklistDataHelper.getChecklistTemplateLineById(checklistTemplateLine.Id);
 
         System.assertNotEquals(null, insertedChecklistTemplateLine.Id, 'Checklist Template Line should be created without GroupBy');
@@ -583,6 +621,89 @@ public with sharing class ChecklistHandler_Test {
         System.assertEquals('1', insertedChecklistTemplateLine.dmpl__DefaultValue__c, 'Checklist Line Default Value should be 1');
     }
 
+
+    //checklist line 
+
+    @isTest
+    static void createChecklistLineWithNamePositive() {
+
+        dmpl__ChecklistTemplate__c checklistTemplate = ChecklistDataHelper.getChecklistTemplateByName('Checklist 1');
+        if (checklistTemplate == null) {
+            checklistTemplate = ChecklistDataHelper.createChecklistTemplateWithDefaults();
+        }
+
+        dmpl__CheckListLines__c checklistLine = ChecklistDataHelper.createChecklistLine(
+            'CLN1',
+            checklistTemplate.Id,
+            'Text'
+        );
+
+
+        dmpl__CheckListLines__c insertedLine = ChecklistDataHelper.getChecklistLineById(checklistLine.Id);
+
+        System.assertNotEquals(null, insertedLine.Id, 'Checklist Line should be created');
+        System.assertEquals('CLN1', insertedLine.Name, 'Checklist Line Name should be CLN1');
+        System.assertEquals('Text', insertedLine.dmpl__DataType__c, 'Checklist Line Data Type should be Text');
+        System.assertEquals(checklistTemplate.Id, insertedLine.dmpl__ChecklistTemplateId__c, 'Checklist Line should be linked to Checklist Template');
+    }
+
+    @isTest
+    static void createChecklistLineWithoutNameNegative() {
+
+        dmpl__ChecklistTemplate__c checklistTemplate = ChecklistDataHelper.getChecklistTemplateByName('Checklist 1');
+        System.assertNotEquals(null, checklistTemplate, 'Checklist Template "Checklist 1" should exist');
+
+         Test.startTest();
+        try {
+
+        dmpl__CheckListLines__c checklistLine = ChecklistDataHelper.createChecklistLine(
+            null,
+            checklistTemplate.Id,
+            'Text'
+        );
+            System.assert(false, 'Insert should have failed due to missing Name');
+        } catch (DmlException e) {
+            System.assert(e.getMessage().contains('Name'), 'Exception should mention missing Name');
+        }
+        Test.stopTest();
+    }
+
+
+    @isTest
+    static void createChecklistLineWithChecklistTemplatePositive() {
+
+        dmpl__ChecklistTemplate__c checklistTemplate = ChecklistDataHelper.getChecklistTemplateByName('Checklist 1');
+        System.assertNotEquals(null, checklistTemplate, 'Checklist Template "Checklist 1" should exist');
+
+        dmpl__CheckListLines__c checklistLine = ChecklistDataHelper.createChecklistLine(
+            'CLN1',
+            checklistTemplate.Id,
+            'Text'
+        );
+
+        dmpl__CheckListLines__c insertedChecklistLine = ChecklistDataHelper.getChecklistLineById(checklistLine.Id);
+        System.assertNotEquals(null, insertedChecklistLine, 'Checklist Line should be inserted');
+        System.assertEquals('CLN1', insertedChecklistLine.Name, 'Checklist Line Name should be CLN1');
+        System.assertEquals(checklistTemplate.Id, insertedChecklistLine.dmpl__ChecklistTemplateId__c, 'Checklist Line should reference Checklist Template "Checklist 1"');
+        System.assertEquals('Text', insertedChecklistLine.dmpl__DataType__c, 'Checklist Line Data Type should be Text');
+    }
+
+    @isTest
+    static void createChecklistLineWithoutChecklistTemplatePositive() {
+ 
+        dmpl__CheckListLines__c checklistLine = ChecklistDataHelper.createChecklistLine(
+            'CLN1',
+            null,
+            'Text'
+        );
+
+
+        dmpl__CheckListLines__c insertedChecklistLine = ChecklistDataHelper.getChecklistLineById(checklistLine.Id);
+        System.assertNotEquals(null, insertedChecklistLine, 'Checklist Line should be inserted');
+        System.assertEquals('CLN1', insertedChecklistLine.Name, 'Checklist Line Name should be CLN1');
+        System.assertEquals(null, insertedChecklistLine.dmpl__ChecklistTemplateId__c, 'Checklist Template should be null');
+        System.assertEquals('Text', insertedChecklistLine.dmpl__DataType__c, 'Checklist Line Data Type should be Text');
+    }
 
 
 

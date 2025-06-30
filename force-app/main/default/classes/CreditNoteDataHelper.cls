@@ -79,7 +79,8 @@ public with sharing class CreditNoteDataHelper {
             LIMIT 1
         ];
     }
-    
+
+
     public static dmpl__CreditNote__c createCreditNoteWithDate(Id partnerAccountId, Id branchId,Id AccountId,Date Documentdate) {
         return (dmpl__CreditNote__c) TestFactory.createSObject(
             new dmpl__CreditNote__c(
@@ -119,4 +120,5 @@ public with sharing class CreditNoteDataHelper {
             WHERE dmpl__CreditNoteId__c = :creditNoteId
         ];
     }
+
 }

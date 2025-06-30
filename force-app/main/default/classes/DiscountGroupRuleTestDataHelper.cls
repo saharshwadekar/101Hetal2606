@@ -42,6 +42,7 @@ public with sharing class DiscountGroupRuleTestDataHelper {
             LIMIT 1
         ];
     }
+
     public static dmpl__DiscountGroupRule__c createDiscountGroupRule(
     dmpl__DiscountGroup__c discountGroup,
     Decimal discountPercent,
@@ -86,4 +87,5 @@ public with sharing class DiscountGroupRuleTestDataHelper {
         WHERE dmpl__DiscountGroupId__c = :discountGroupId
     ];
 }
+
 }

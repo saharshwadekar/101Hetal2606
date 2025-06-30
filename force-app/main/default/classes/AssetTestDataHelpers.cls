@@ -204,7 +204,8 @@ public with sharing class AssetTestDataHelpers {
         dmpl__StandardValue__c,
         dmpl__Remarks__c,
         dmpl__MinValue__c,
-        dmpl__MaxValue__c
+        dmpl__MaxValue__c,
+        dmpl__ValueType__c
         FROM
         dmpl__AssetDiagnosticData__c LIMIT 1];
     }
@@ -218,7 +219,8 @@ public with sharing class AssetTestDataHelpers {
         dmpl__StandardValue__c,
         dmpl__Remarks__c,
         dmpl__MinValue__c,
-        dmpl__MaxValue__c
+        dmpl__MaxValue__c,
+        dmpl__ValueType__c
         FROM
         dmpl__AssetDiagnosticData__c where Id= :assetDiagnosticDataId LIMIT 1];
     }
@@ -436,21 +438,19 @@ public with sharing class AssetTestDataHelpers {
                 dmpl__AssetId__c = asset != null ? asset.Id : null,
                 dmpl__ItemId__c = item != null ? item.Id : null,
                 dmpl__ItemHealthCheckId__c = itemHealthCheckId,
-                dmpl__ExternalId__c = externalId,
-                dmpl__ValueType__c = valueType,
-                dmpl__Condition__c = condition,
-                dmpl__MinValue__c = minValue,
-                dmpl__MaxValue__c = maxValue,
-                dmpl__LastValue__c = lastValue,
-                dmpl__StandardValue__c = standardValue,
+                dmpl__ExternalId__c = externalId != null ? externalId : 'EXT-' + String.valueOf(Math.random()),
+                dmpl__ValueType__c = valueType != null ? valueType : 'RAG',
+                dmpl__Condition__c = condition != null ? condition : 'Green',
+                dmpl__MinValue__c = minValue != null ? minValue : 0,
+                dmpl__MaxValue__c = maxValue != null ? maxValue : 100,
+                dmpl__LastValue__c = lastValue != null ? lastValue : 50,
+                dmpl__StandardValue__c = standardValue != null ? standardValue : '50',
                 dmpl__Remarks__c = remarks
             ),
-            //'AssetDiagnosticDataDefaults',
             true
         );
     }
 
-    // Get method to retrieve Asset Diagnostic Data by Asset Id
     public static dmpl__AssetDiagnosticData__c getAssetDiagnosticDataByAsset(Id assetId) {
         return [
             SELECT Id, Name, dmpl__AssetId__c, dmpl__ItemId__c, dmpl__ValueType__c,
@@ -555,19 +555,18 @@ public with sharing class AssetTestDataHelpers {
                 dmpl__BillingAccountId__c = billingAccount != null ? billingAccount.Id : null,
                 dmpl__ItemId__c = item != null ? item.Id : null,
                 dmpl__ItemServiceContractId__c = serviceContractId,
-                dmpl__ExternalId__c = externalId,
-                dmpl__DueDate__c = dueDate,
-                dmpl__DueInHours__c = dueInHours,
-                dmpl__GraceUsageDays__c = graceUsageDays,
-                dmpl__GraceUsageHours__c = graceUsageHours,
-                dmpl__GraceUsageReading__c = graceUsageReading,
-                dmpl__ActivatedDate__c = activatedDate,
-                dmpl__ValidTillDate__c = validTillDate,
-                dmpl__ValidTillHours__c = validTillHours,
-                dmpl__ValidTillUsageReading__c = validTillUsageReading,
-                dmpl__IsUtilized__c = isUtilized
+                dmpl__ExternalId__c = externalId != null ? externalId : 'EXT-' + String.valueOf(Math.random()),
+                dmpl__DueDate__c = dueDate != null ? dueDate : Date.today().addDays(30),
+                dmpl__DueInHours__c = dueInHours != null ? dueInHours : 10,
+                dmpl__GraceUsageDays__c = graceUsageDays != null ? graceUsageDays : 5,
+                dmpl__GraceUsageHours__c = graceUsageHours != null ? graceUsageHours : 5,
+                dmpl__GraceUsageReading__c = graceUsageReading != null ? graceUsageReading : 5,
+                dmpl__ActivatedDate__c = activatedDate != null ? activatedDate : Date.today(),
+                dmpl__ValidTillDate__c = validTillDate != null ? validTillDate : Date.today().addMonths(6),
+                dmpl__ValidTillHours__c = validTillHours != null ? validTillHours : 100,
+                dmpl__ValidTillUsageReading__c = validTillUsageReading != null ? validTillUsageReading : 100,
+                dmpl__IsUtilized__c = isUtilized != null ? isUtilized : false
             ),
-            //'AssetServiceContractDefaults',
             true
         );
     }
@@ -615,7 +614,7 @@ public with sharing class AssetTestDataHelpers {
                 EndDate = endDate != null ? endDate : Date.today().addMonths(6)
                 //Status = status != null ? status : 'Draft'
             ),
-            true // insert record
+            true 
         );
     }
 
@@ -637,247 +636,44 @@ public with sharing class AssetTestDataHelpers {
             ALL ROWS
         ];
     }
+
+   public static dmpl__ProductHealthCheck__c createProductHealthCheck(
+        Account partnerAccount,
+        dmpl__Branch__c branch,
+        Account customer,
+        Asset asset,
+        String externalId,
+        String name 
+    ) {
+        return (dmpl__ProductHealthCheck__c) TestFactory.createSObject(
+            new dmpl__ProductHealthCheck__c(
+                dmpl__PartnerAccountId__c = partnerAccount != null ? partnerAccount.Id : null,
+                dmpl__BranchId__c = branch != null ? branch.Id : null,
+                dmpl__AccountId__c = customer != null ? customer.Id : null,
+                dmpl__AssetId__c = asset != null ? asset.Id : null,
+                dmpl__ExternalId__c = externalId
+            ),
+            true
+        );
+    }
+
+    // Asset Service contract line
+    public static dmpl__AssetServiceContractLine__c createAssetServiceContractLine(
+        dmpl__Item__c item,
+        dmpl__AssetServiceContract__c assetServiceContract,
+        dmpl__Item__c componentItem,
+        Decimal quantity,
+        Decimal utilizedQuantity
+    ) {
+        return (dmpl__AssetServiceContractLine__c) TestFactory.createSObject(
+            new dmpl__AssetServiceContractLine__c(
+                dmpl__AssetServiceContractId__c = assetServiceContract != null ? assetServiceContract.Id : null,
+                dmpl__ComponentItemId__c = componentItem != null ? componentItem.Id : null,
+                dmpl__Quantity__c = quantity != null ? quantity : 1,
+                dmpl__UtilizedQuantity__c = utilizedQuantity != null ? utilizedQuantity : 0
+            ),
+            true
+        );
+    }
+
 }
-
-
-
-
-
-    // public static dmpl__Asset__c createAsset(
-    //     String name,
-    //     Account account,
-    //     Date saleDate,
-    //     dmpl__Branch__c branch,
-    //     dmpl__Item__c item
-    // ) {
-    //     return (dmpl__Asset__c) TestFactory.createSObject(
-    //         new dmpl__Asset__c(
-    //             Name = name,
-    //             AccountId = account != null ? account.Id : null,
-    //             dmpl__SaleDate__c = saleDate,
-    //             dmpl__BranchId__c = branch != null ? branch.Id : null,
-    //             dmpl__ItemId__c = item != null ? item.Id : null
-    //         ),
-    //         //'AssetDefaults',
-    //         true
-    //     );
-    // }
-
-    // public static dmpl__Asset__c getAsset(String name) {
-    //     return [
-    //         SELECT Id, Name, AccountId, dmpl__SaleDate__c, dmpl__BranchId__c, dmpl__ItemId__c
-    //         FROM dmpl__Asset__c
-    //         WHERE Name = :name
-    //         LIMIT 1
-    //     ];
-    // }
-
-    // public static dmpl__AssetAccountHistory__c createAssetAccountHistory(
-    //     String name,
-    //     dmpl__Asset__c asset,
-    //     Account account,
-    //     Date ownershipStartDate,
-    //     Date ownershipEndDate,
-    //     Decimal atUsageReading,
-    //     Decimal atUsageHour
-    // ) {
-    //     return (dmpl__AssetAccountHistory__c) TestFactory.createSObject(
-    //         new dmpl__AssetAccountHistory__c(
-    //             Name = name,
-    //             dmpl__InstallbaseId__c = asset != null ? asset.Id : null,
-    //             dmpl__AccountId__c = account != null ? account.Id : null,
-    //             dmpl__OwnershipStartDate__c = ownershipStartDate,
-    //             dmpl__OwnershipEndDate__c = ownershipEndDate,
-    //             dmpl__AtUsageReading__c = atUsageReading,
-    //             dmpl__AtUsageHour__c = atUsageHour
-    //         ),
-    //         //'AssetAccountHistoryDefaults',
-    //         true
-    //     );
-    // }
-
-    // public static dmpl__AssetAccountHistory__c getAssetAccountHistory(String name) {
-    //     return [
-    //         SELECT Id, Name, dmpl__InstallbaseId__c, dmpl__AccountId__c,
-    //             dmpl__OwnershipStartDate__c, dmpl__OwnershipEndDate__c,
-    //             dmpl__AtUsageReading__c, dmpl__AtUsageHour__c
-    //         FROM dmpl__AssetAccountHistory__c
-    //         WHERE Name = :name
-    //         LIMIT 1
-    //     ];
-    // }
-    
-    // public static dmpl__AssetDiagnosticData__c createAssetDiagnosticData(
-    //     String name,
-    //     dmpl__Asset__c asset,
-    //     dmpl__Item__c item,
-    //     String valueType,
-    //     Decimal standardValue,
-    //     Decimal minValue,
-    //     Decimal maxValue,
-    //     Decimal lastValue
-    // ) {
-    //     return (dmpl__AssetDiagnosticData__c) TestFactory.createSObject(
-    //         new dmpl__AssetDiagnosticData__c(
-    //             Name = name,
-    //             dmpl__AssetId__c = asset != null ? asset.Id : null,
-    //             dmpl__ItemId__c = item != null ? item.Id : null,
-    //             dmpl__ValueType__c = valueType,
-    //             dmpl__StandardValue__c = standardValue,
-    //             dmpl__MinValue__c = minValue,
-    //             dmpl__MaxValue__c = maxValue,
-    //             dmpl__LastValue__c = lastValue
-    //         ),
-    //         //'AssetDiagnosticDataDefaults',
-    //         true
-    //     );
-    // }
-
-    // public static dmpl__AssetDiagnosticData__c getAssetDiagnosticData(String name) {
-    //     return [
-    //         SELECT Id, Name, dmpl__AssetId__c, dmpl__ItemId__c, dmpl__ValueType__c,
-    //                dmpl__StandardValue__c, dmpl__MinValue__c, dmpl__MaxValue__c, dmpl__LastValue__c
-    //         FROM dmpl__AssetDiagnosticData__c
-    //         WHERE Name = :name
-    //         LIMIT 1
-    //     ];
-    // }
-
-    // public static dmpl__AssetDiagnosticData__c createAssetDiagnosticDataBasic(String name, dmpl__Asset__c asset) {
-    //     return createAssetDiagnosticData(name, asset, null, null, null, null, null, null);
-    // }
-
-    // public static dmpl__AssetMaintenance__c createAssetMaintenance(
-    //     String name,
-    //     dmpl__Asset__c asset,
-    //     dmpl__ServiceCampaign__c campaign,
-    //     dmpl__ServiceCampaignItem__c campaignItem,
-    //     dmpl__ServiceCampaignMember__c campaignMember,
-    //     Boolean isMandatory,
-    //     Decimal quantity
-    // ) {
-    //     return (dmpl__AssetMaintenance__c) TestFactory.createSObject(
-    //         new dmpl__AssetMaintenance__c(
-    //             Name = name,
-    //             dmpl__AssetId__c = asset != null ? asset.Id : null,
-    //             dmpl__ServiceCampaignId__c = campaign != null ? campaign.Id : null,
-    //             dmpl__ServiceCampaignItemId__c = campaignItem != null ? campaignItem.Id : null,
-    //             dmpl__ServiceCampaignMemberId__c = campaignMember != null ? campaignMember.Id : null,
-    //             dmpl__IsMandatory__c = isMandatory,
-    //             dmpl__Quantity__c = quantity
-    //         ),
-    //         true
-    //     );
-    // }
-
-    // public static dmpl__AssetMaintenance__c getAssetMaintenance(String name) {
-    //     return [
-    //         SELECT Id, Name, dmpl__AssetId__c, dmpl__ServiceCampaignId__c,
-    //                dmpl__ServiceCampaignItemId__c, dmpl__ServiceCampaignMemberId__c,
-    //                dmpl__IsMandatory__c, dmpl__Quantity__c
-    //         FROM dmpl__AssetMaintenance__c
-    //         WHERE Name = :name
-    //         LIMIT 1
-    //     ];
-    // }
-
-    // public static dmpl__AssetMaintenance__c createBasicAssetMaintenance(String name, dmpl__Asset__c asset) {
-    //     return createAssetMaintenance(name, asset, null, null, null, false, 1);
-    // }
-
-    // public static dmpl__AssetServiceContract__c createAssetServiceContract(
-    //     String name,
-    //     dmpl__Item__c item,
-    //     dmpl__ServiceContract__c serviceContract,
-    //     Account billingAccount,
-    //     Date dueDate,
-    //     Integer dueInHours,
-    //     Integer graceUsageHours,
-    //     Integer validTillHours,
-    //     Date activatedDate,
-    //     Date validTillDate,
-    //     Integer graceUsageDays
-    // ) {
-    //     return (dmpl__AssetServiceContract__c) TestFactory.createSObject(
-    //         new dmpl__AssetServiceContract__c(
-    //             Name = name,
-    //             dmpl__ItemId__c = item != null ? item.Id : null,
-    //             dmpl__ItemServiceContractId__c = serviceContract != null ? serviceContract.Id : null,
-    //             dmpl__BillingAccountId__c = billingAccount != null ? billingAccount.Id : null,
-    //             dmpl__DueDate__c = dueDate,
-    //             dmpl__DueInHours__c = dueInHours,
-    //             dmpl__GraceUsageHours__c = graceUsageHours,
-    //             dmpl__ValidTillHours__c = validTillHours,
-    //             dmpl__ActivatedDate__c = activatedDate,
-    //             dmpl__ValidTillDate__c = validTillDate,
-    //             dmpl__GraceUsageDays__c = graceUsageDays
-    //         ),
-    //         true
-    //     );
-    // }
-
-    // public static dmpl__AssetServiceContract__c getAssetServiceContract(String name) {
-    //     return [
-    //         SELECT Id, Name, dmpl__ItemId__c, dmpl__ItemServiceContractId__c, dmpl__BillingAccountId__c,
-    //             dmpl__DueDate__c, dmpl__DueInHours__c, dmpl__GraceUsageHours__c,
-    //             dmpl__ValidTillHours__c, dmpl__ActivatedDate__c, dmpl__ValidTillDate__c, dmpl__GraceUsageDays__c
-    //         FROM dmpl__AssetServiceContract__c
-    //         WHERE Name = :name
-    //         LIMIT 1
-    //     ];
-    // }
-
-    // public static dmpl__ServiceContract__c createServiceContract(String name, Account account) {
-    //     return (dmpl__ServiceContract__c) TestFactory.createSObject(
-    //         new dmpl__ServiceContract__c(
-    //             Name = name,
-    //             AccountId = account != null ? account.Id : null,
-    //             ContractNumber = '00000001'
-    //         ),
-    //         true
-    //     );
-    // }
-
-    // public static dmpl__ServiceContract__c getServiceContract(String name) {
-    //     return [
-    //         SELECT Id, Name, AccountId, ContractNumber
-    //         FROM dmpl__ServiceContract__c
-    //         WHERE Name = :name
-    //         LIMIT 1
-    //     ];
-    // }
-
-    // public static dmpl__AssetServiceContractLine__c createAssetServiceContractLine(
-    //     String name,
-    //     dmpl__AssetServiceContract__c assetServiceContract,
-    //     dmpl__Item__c item,
-    //     dmpl__Item__c componentItem,
-    //     Decimal quantity,
-    //     Decimal utilizedQuantity
-    // ) {
-    //     return (dmpl__AssetServiceContractLine__c) TestFactory.createSObject(
-    //         new dmpl__AssetServiceContractLine__c(
-    //             Name = name,
-    //             dmpl__AssetServiceContractId__c = assetServiceContract != null ? assetServiceContract.Id : null,
-    //             dmpl__ItemId__c = item != null ? item.Id : null,
-    //             dmpl__ComponentItemId__c = componentItem != null ? componentItem.Id : null,
-    //             dmpl__Quantity__c = quantity,
-    //             dmpl__UtilizedQuantity__c = utilizedQuantity
-    //         ),
-    //         true
-    //     );
-    // }
-
-    // public static dmpl__AssetServiceContractLine__c getAssetServiceContractLine(String name) {
-    //     return [
-    //         SELECT Id, Name,
-    //             dmpl__AssetServiceContractId__c,
-    //             dmpl__ItemId__c,
-    //             dmpl__ComponentItemId__c,
-    //             dmpl__Quantity__c,
-    //             dmpl__UtilizedQuantity__c
-    //         FROM dmpl__AssetServiceContractLine__c
-    //         WHERE Name = :name
-    //         LIMIT 1
-    //     ];
-    // }
