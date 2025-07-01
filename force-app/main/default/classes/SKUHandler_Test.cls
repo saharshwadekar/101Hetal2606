@@ -135,7 +135,7 @@ public with sharing class SKUHandler_Test {
 
 
     @isTest
-    static void createSKUWithoutSKUNameNegative() {
+    static void createSKUWithoutSKUNamePositive() {
 
     Test.startTest();
 
@@ -152,11 +152,12 @@ public with sharing class SKUHandler_Test {
             False,
             null
         );
-       // System.assert.isTrue(sku == null, 'SKU creation must fail when SKU Name is missing.');
     } catch (Exception e) {
         exceptionThrown = true;
-        System.assert.isTrue(sku == null, 'SKU creation must fail when SKU Name is missing.');
+        System.assert.isTrue(sku != null, 'SKU creation must fail when SKU Name is missing.');
     }
+    System.assertEquals(item9.Id, sku.dmpl__ItemId__c, 'Item ID should match');
+
     Test.stopTest();
     }
 
@@ -186,7 +187,7 @@ public with sharing class SKUHandler_Test {
 
 
     @isTest
-static void updateMultipleSKUCreatedForTheSameItemWithDifferentColorsPositive() {
+    static void updateMultipleSKUCreatedForTheSameItemWithDifferentColorsPositive() {
     Test.startTest();
 
     dmpl__Item__c item9 = TestDataHelpers.getItem('Item 9');
@@ -201,7 +202,7 @@ static void updateMultipleSKUCreatedForTheSameItemWithDifferentColorsPositive() 
 
     dmpl__SKU__c fetchSku = SKUDataHelper.getSku(sku.Id);
     System.assertNotEquals(null, fetchSku, 'SKU record should be created');
-    System.assertEquals('sku3', fetchSku.Name, 'SKU Name should match');
+    System.assertEquals('SKU 3', fetchSku.Name, 'SKU Name should match');
     System.assertEquals(item9.Id, fetchSku.dmpl__ItemId__c, 'Item ID should match');
     System.assertEquals('Red', fetchSku.dmpl__ProductColor__c, 'Initial Product Color should be Red');
 

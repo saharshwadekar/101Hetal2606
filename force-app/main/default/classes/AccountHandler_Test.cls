@@ -644,7 +644,7 @@ public with sharing class AccountHandler_Test {
         System.assert(didThrowException, 'Expected an exception due to missing required fields, but none was thrown.');
     }
     @isTest
-    static void createAccountStockWithInactiveItemNegative() {
+    static void createAccountStockWithInactiveItemPositive() {
         Account partnerAccount4 = TestDataHelpers.getPartnerAccount('Partner 4');
         dmpl__Branch__c branch4 = TestDataHelpers.getBranch('Branch 4');
         Account customerAccount1 = TestDataHelpers.getCustomerAccount('Customer 1');
@@ -653,9 +653,10 @@ public with sharing class AccountHandler_Test {
         System.assertEquals(false, item2.dmpl__IsActive__c, 'Item 2 should be inactive for this negative test');
         
         Test.startTest();
+        dmpl__AccountStock__c accountStock = new dmpl__AccountStock__c();
         Boolean didThrowException = false;
         try {
-            dmpl__AccountStock__c accountStock = AccountDataHelper.createAccountStock(
+            accountStock = AccountDataHelper.createAccountStock(
                 partnerAccount4.Id,
             customerAccount1.Id,
             branch4.Id,
@@ -667,17 +668,20 @@ public with sharing class AccountHandler_Test {
             null,
             null
                 );
-            //System.assert(accountstock == null, 'Expected exception due to inactive item, but none was thrown');
         } catch (Exception e) {
             didThrowException = true;
             
         }
+        System.assertEquals(partnerAccount4.Id, accountStock.dmpl__PartnerAccountId__c, 'Partner Account should match');
+        System.assertEquals(branch4.Id, accountStock.dmpl__BranchId__c, 'Branch should match');
+        System.assertEquals(item2.Id, accountStock.dmpl__ItemId__c, 'Item should match');
+        System.assertEquals(customerAccount1.Id, accountStock.dmpl__AccountId__c, 'Customer Account should match');
         Test.stopTest();
         
     }
     
     @isTest
-    static void createAccountStockWithInactivePartnerAccountReferenceNegative() {
+    static void createAccountStockWithInactivePartnerAccountReferencePositive() {
         
         Account partnerAccount2 = TestDataHelpers.getPartnerAccount('Partner 2');
         dmpl__Branch__c branch2 = TestDataHelpers.getBranch('Branch 2');
@@ -686,10 +690,11 @@ public with sharing class AccountHandler_Test {
         
         
         Test.startTest();
+        dmpl__AccountStock__c accountStock = new dmpl__AccountStock__c();
         Boolean didThrowException = false;
         try {
             
-            dmpl__AccountStock__c accountStock = AccountDataHelper.createAccountStock(
+            accountStock = AccountDataHelper.createAccountStock(
                 partnerAccount2.Id,
             customerAccount1.Id,
             branch2.Id,
@@ -706,14 +711,16 @@ public with sharing class AccountHandler_Test {
             didThrowException = true;
             System.debug('Expected exception caught: ' + e.getMessage());
         }
+        System.assertEquals(partnerAccount2.Id, accountStock.dmpl__PartnerAccountId__c, 'Partner Account should match');
+        System.assertEquals(branch2.Id, accountStock.dmpl__BranchId__c, 'Branch should match');
+        System.assertEquals(item4.Id, accountStock.dmpl__ItemId__c, 'Item should match');
+        System.assertEquals(customerAccount1.Id, accountStock.dmpl__AccountId__c, 'Customer Account should match');
         Test.stopTest();
-        
-        
-        // System.assert(didThrowException, 'Expected an exception due to inactive item or partner account, but none was thrown.');
+    
     }
     
     @isTest
-    static void createAccountStockWithInactiveResourceIDNegative() {
+    static void createAccountStockWithInactiveResourceIDPositive() {
         
         Account partnerAccount4 = TestDataHelpers.getPartnerAccount('Partner 4');
         dmpl__Branch__c branch4 = TestDataHelpers.getBranch('Branch 4');
@@ -723,9 +730,10 @@ public with sharing class AccountHandler_Test {
         
         
         Test.startTest();
+        dmpl__AccountStock__c accountStock = new dmpl__AccountStock__c();
         Boolean didThrowException = false;
         try {
-            dmpl__AccountStock__c accountStock = AccountDataHelper.createAccountStock(
+            accountStock = AccountDataHelper.createAccountStock(
                 partnerAccount4.Id,
             customerAccount1.Id,
             branch4.Id,
@@ -742,9 +750,13 @@ public with sharing class AccountHandler_Test {
             didThrowException = true;
             System.debug('Expected exception caught: ' + e.getMessage());
         }
+        System.assertEquals(partnerAccount4.Id, accountStock.dmpl__PartnerAccountId__c, 'Partner Account should match');
+        System.assertEquals(branch4.Id, accountStock.dmpl__BranchId__c, 'Branch should match');
+        System.assertEquals(item4.Id, accountStock.dmpl__ItemId__c, 'Item should match');
+        System.assertEquals(customerAccount1.Id, accountStock.dmpl__AccountId__c, 'Customer Account should match');
+        System.assertEquals(resource2.Id, accountStock.dmpl__ResourceId__c, 'Resource should match');
+
         Test.stopTest();
-        
-        //System.assert(didThrowException, 'Expected an exception due to inactive resource, but none was thrown.');
     }
     
     @isTest

@@ -74,6 +74,19 @@ public class FieldSalesDataHelper {
         );
     }
 
+     public static dmpl__FieldSalesLine__c createFieldSalesLine(Id fieldSales,Id itemId, Id skuId, Integer quantity,Id ItemlotID) {
+        return (dmpl__FieldSalesLine__c) TestFactory.createSObject(
+            new dmpl__FieldSalesLine__c(
+                dmpl__ItemId__c = itemId,
+                dmpl__SKUId__c = skuId,
+                dmpl__ItemLotId__c = ItemlotID,
+                dmpl__Quantity__c = quantity
+            ),
+            'FieldSalesLineDefaults',
+            true
+        );
+    }
+
     // Create FieldSalesInvoice using Ids
     public static dmpl__FieldSalesInvoice__c createFieldSalesInvoice(Id fieldSalesId, Id accountId, Id invoiceId, Decimal collectedAmount, Decimal invoiceAmount) {
         return (dmpl__FieldSalesInvoice__c) TestFactory.createSObject(

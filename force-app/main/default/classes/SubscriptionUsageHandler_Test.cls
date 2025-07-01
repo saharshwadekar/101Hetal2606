@@ -102,6 +102,22 @@ public with sharing class SubscriptionUsageHandler_Test {
         System.assertEquals(2, usage.dmpl__Quantity__c, 'Quantity should be 2');
         System.assertEquals(subscription.Id, usage.dmpl__SubscriptionId__c, 'Subscription should be match');
     }
+    @isTest
+    static void createSubscriptionUsageWithNoCustomerAccountPositive(){
+        dmpl__Subscription__c subscription = SubscriptionDataHelper.getSubscription();
+        Asset asset1 = TestDataHelpers.getAsset('Asset 1');
+        dmpl__Item__c  item1 = TestDataHelpers.getItem('Item 1');
+        Test.startTest();
+        try{
+            dmpl__SubscriptionUsage__c usage = SubscriptionUsageDataHelper.createSubscriptionUsage(null, asset1, item1,2, subscription);
+            System.assertNotEquals(null, usage.Id, 'Subscription usage should be created without customer account');
+
+        }catch(Exception e){
+            System.Assert.isTrue(true, 'subscription usage should not be created without customer');
+        }
+        Test.stopTest();
+
+    }
 
     @isTest
     static void updateSubscriptionUsageWithCustomerAccountPositive(){
@@ -214,7 +230,7 @@ public with sharing class SubscriptionUsageHandler_Test {
 
 
     @isTest
-    static void updateSubscriptionUsageWithInactiveItemPositive(){
+    static void updateSubscriptionUsageWithInactiveItemNegative(){
         
         dmpl__Subscription__c subscription = SubscriptionDataHelper.getSubscription();
         Account customerAccount1 = TestDataHelpers.getCustomerAccount('Customer 1');

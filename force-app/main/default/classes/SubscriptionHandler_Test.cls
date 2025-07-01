@@ -17,7 +17,7 @@ public with sharing class SubscriptionHandler_Test {
         dmpl__SaleInvoice__c saleInvoice = SaleInvoiceTestDataHelpers.createSaleInvoice(TestDataHelpers.getCustomerAccount(),TestDataHelpers.getBranch(),
                                                                                             saleOrder,TestDataHelpers.getPriceList());
         dmpl__SaleInvoiceLine__c saleInvoiceLine = SaleInvoiceTestDataHelpers.createSaleInvoiceLine(saleInvoice,item,sku,itemLot,taxGroup,priceListRule);
-        dmpl__Subscription__c subscription = SubscriptionDataHelper.createSubscription(saleInvoice,saleInvoiceLine,Item,saleInvoiceLine.dmpl__AssetId__c);
+        dmpl__Subscription__c subscription1 = SubscriptionDataHelper.createSubscription(saleInvoice,saleInvoiceLine,Item,saleInvoiceLine.dmpl__AssetId__c);
 
 
         Test.startTest();
@@ -325,6 +325,46 @@ public with sharing class SubscriptionHandler_Test {
     }
 
     @isTest
+    static void updateSubscriptionWithSaleOrderRefPositive(){
+
+        Test.startTest();
+        Account customerAccount1 = TestDataHelpers.getCustomerAccount('Customer 1');
+        Account partnerAccount1=TestDataHelpers.getPartnerAccount('Partner 1');
+        dmpl__Branch__c branch1=TestDataHelpers.getBranch('Branch 1');
+        dmpl__Item__c item1=TestDataHelpers.getItem('Item 1');
+        dmpl__SaleOrder__c saleOrder = SaleOrderDataHelper.createSaleOrder(customerAccount1.Id, partnerAccount1.Id, branch1.Id,null,null,true,null); 
+        
+        dmpl__Subscription__c subscription = SubscriptionDataHelper.createSubscription(partnerAccount1,customerAccount1,branch1,item1,2,null,null,null);
+
+        System.assertNotEquals(null, subscription.Id, 'subscription should be created');
+        System.assertEquals(partnerAccount1.Id, subscription.dmpl__PartnerAccountId__c, 'Partner Account should be Partner 1');
+        System.assertEquals(customerAccount1.Id, subscription.dmpl__AccountId__c, 'Customer Account should be Customer 1');
+        System.assertEquals(branch1.Id, subscription.dmpl__BranchId__c, 'Branch should be Branch 1');
+        System.assertEquals(item1.Id, subscription.dmpl__ItemId__c, 'Item should be Item 1');
+        System.assertEquals(2, subscription.dmpl__Quantity__c, 'Quantity should be 2');
+        
+        Boolean exceptionThrown = false;
+        try{
+            subscription.dmpl__SaleOrderId__c = saleOrder.Id;
+            update subscription;
+        }catch (Exception e) {
+            exceptionThrown = true;
+        }
+        System.assertEquals(false, exceptionThrown,'exception caught when assigning customer account');
+
+        if(!exceptionThrown){
+            System.assertNotEquals(null, subscription.Id, 'subscription should be created');
+            System.assertEquals(customerAccount1.Id, subscription.dmpl__AccountId__c, 'Account should be Customer 1');
+            System.assertEquals(partnerAccount1.Id, subscription.dmpl__PartnerAccountId__c, 'Partner Account should be Partner 1');
+            System.assertEquals(branch1.Id, subscription.dmpl__BranchId__c, 'Branch should be Branch 1');
+            System.assertEquals(item1.Id, subscription.dmpl__ItemId__c, 'Item should be Item 1');
+            System.assertEquals(2, subscription.dmpl__Quantity__c, 'Quantity should be 2');
+            System.assertEquals(saleOrder.Id, subscription.dmpl__SaleOrderId__c, 'sale order should match');
+        }
+        Test.stopTest();
+    }
+
+    @isTest
     static void updateSubscriptionWithWrongPartnerAccountNegative(){
 
         Test.startTest();
@@ -565,57 +605,6 @@ public with sharing class SubscriptionHandler_Test {
 
     }
 
-//Invalid Scenario
-    // @isTest
-    // static void createSubscriptionWithRequiredSKUPositive(){
-    //     Account customerAccount1 = TestDataHelpers.getCustomerAccount('Customer 1');
-    //     Account partnerAccount1=TestDataHelpers.getPartnerAccount('Partner 1');
-    //     dmpl__Branch__c branch1=TestDataHelpers.getBranch('Branch 1');
-    //     dmpl__Item__c item7=TestDataHelpers.getItem('Item 7');
-    //     dmpl__SKU__c sku1 = TestDataHelpers.getSKU('SKU 1');
-
-    //     dmpl__SaleOrder__c saleOrder = SaleOrderDataHelper.createSaleOrder(customerAccount1.Id, partner1.Id, branch1.Id,null,null,null,null);
-
-    //     Test.startTest();
-    //     dmpl__Subscription__c subscription = SubscriptionDataHelper.createSubscription(partnerAccount1,customerAccount1,branch1,item1,2,saleOrder,sku1,null,null);
-    //     Test.stopTest();
-
-    //     System.assertNotEquals(null, subscription.Id, 'subscription should be created');
-    //     System.assertEquals(customerAccount1.Id, subscription.dmpl__AccountId__c, 'Account should be Customer 1');
-    //     System.assertEquals(partnerAccount1.Id, subscription.dmpl__PartnerAccountId__c, 'Partner Account should be Partner 1');
-    //     System.assertEquals(branch1.Id, subscription.dmpl__BranchId__c, 'Branch should be Branch 1');
-    //     System.assertEquals(item7.Id, subscription.dmpl__ItemId__c, 'Item should be Item 1');
-    //     System.assertEquals(2, subscription.dmpl__Quantity__c, 'Quantity should be 2');
-    //     System.assertEquals(saleOrder.Id, subscription.dmpl__SaleOrderId__c, 'saleOrder should be match');
-    //     System.assertEquals(sku1.Id, subscription.dmpl__SKUId__c, 'sku should be match');
-
-    // }
-
-
-    //Invalid scenario
-
-    // @isTest
-    // static void createSubscriptionWithNoRequiredSKUPositive(){
-    //     Test.startTest();
-    //     Account customerAccount1 = TestDataHelpers.getCustomerAccount('Customer 1');
-    //     Account partnerAccount1=TestDataHelpers.getPartnerAccount('Partner 1');
-    //     dmpl__Branch__c branch1=TestDataHelpers.getBranch('Branch 1');
-    //     dmpl__Item__c item1=TestDataHelpers.getItem('Item 1');
-    //     dmpl__SaleOrder__c saleOrder = SaleOrderDataHelper.createSaleOrder(customerAccount1.Id, partner1.Id, branch1.Id,null,null,null,null);        
-    //     Test.startTest();
-    //     dmpl__Subscription__c subscription = SubscriptionDataHelper.createSubscription(partnerAccount1,customerAccount1,branch1,item1,2,saleOrder,null,null,null);
-    //     Test.stopTest();
-
-    //     System.assertNotEquals(null, subscription.Id, 'subscription should be created');
-    //     System.assertEquals(customerAccount1.Id, subscription.dmpl__AccountId__c, 'Account should be Customer 1');
-    //     System.assertEquals(partnerAccount1.Id, subscription.dmpl__PartnerAccountId__c, 'Partner Account should be Partner 1');
-    //     System.assertEquals(branch1.Id, subscription.dmpl__BranchId__c, 'Branch should be Branch 1');
-    //     System.assertEquals(item1.Id, subscription.dmpl__ItemId__c, 'Item should be Item 1');
-    //     System.assertEquals(2, subscription.dmpl__Quantity__c, 'Quantity should be 2');
-    //     System.assertEquals(saleOrder.Id, subscription.dmpl__SaleOrderId__c, 'saleOrder should be match');
-
-    // }
-
     @isTest
     static void createSubscriptionWithSaleOrderLineReferencePositive(){
         Test.startTest();
@@ -729,88 +718,57 @@ public with sharing class SubscriptionHandler_Test {
        
     }
 
-    //Invalid scenario
-
-    // @isTest
-    // static void updateSubscriptionWithRemovingRequiredSKUNegative(){
-
-    //     Test.startTest();
-    //     Account customerAccount1 = TestDataHelpers.getCustomerAccount('Customer 1');
-    //     Account partnerAccount1=TestDataHelpers.getPartnerAccount('Partner 1');
-    //     dmpl__Branch__c branch1=TestDataHelpers.getBranch('Branch 1');
-    //     dmpl__Item__c item9=TestDataHelpers.getItem('Item 9');
-    //     dmpl__SKU__c sku3 = TestDataHelpers.getSKU('SKU 3');
-
-    //     dmpl__SaleOrder__c saleOrder = SaleOrderDataHelper.createSaleOrder(customerAccount1.Id, partnerAccount1.Id, branch1.Id,null,null,true,null); 
-
-    //     dmpl__Subscription__c subscription = SubscriptionDataHelper.createSubscription(partnerAccount1,customerAccount1,branch1,item9,2,saleOrder,sku3,null,null);
-
-    //     System.assertNotEquals(null, subscription.Id, 'subscription should be created');
-    //     System.assertEquals(customerAccount1.Id, subscription.dmpl__AccountId__c, 'Account should be Customer 1');
-    //     System.assertEquals(partnerAccount1.Id, subscription.dmpl__PartnerAccountId__c, 'Partner Account should be Partner 1');
-    //     System.assertEquals(branch1.Id, subscription.dmpl__BranchId__c, 'Branch should be Branch 1');
-    //     System.assertEquals(item9.Id, subscription.dmpl__ItemId__c, 'Item should be Item 9');
-    //     System.assertEquals(sku3.Id, subscription.dmpl__SKUId__c, 'sku should be sku 3');
-    //     System.assertEquals(2, subscription.dmpl__Quantity__c, 'Quantity should be 2');
-    //     System.assertEquals(saleOrder.Id, subscription.dmpl__SaleOrderId__c, 'saleOrder should be match');
-
-        
-    //     Boolean exceptionThrown = false;
-    //     try{
-    //         subscription.dmpl__SKUId__c = null;
-    //         update subscription;
-    //     }catch (Exception e) {
-    //         exceptionThrown = true;
-    //     }
-    //     System.assertEquals(true, exceptionThrown,'expected exception when removing required sku');
-
-        
-    // }
+    @isTest
+    static void updateSubscriptionWithSaleOrderLineReferencePositive(){
+        Test.startTest();
+        Account customerAccount1 = TestDataHelpers.getCustomerAccount('Customer 1');
+        Account partnerAccount1=TestDataHelpers.getPartnerAccount('Partner 1');
+        dmpl__Branch__c branch1=TestDataHelpers.getBranch('Branch 1');
+        dmpl__Item__c item5=TestDataHelpers.getItem('Item 5');
+        dmpl__SaleOrder__c saleOrder1 = SaleOrderDataHelper.createSaleOrder(customerAccount1.Id, partnerAccount1.Id, branch1.Id,null,null,true,null); 
+        dmpl__SaleOrder__c saleOrder = SaleOrderDataHelper.getSaleOrder(saleOrder1.Id);
+        System.assertNotEquals(null, saleOrder.Id, 'sale Order should be created');
+        System.assertEquals(customerAccount1.Id,saleOrder.dmpl__AccountId__c,'Account Name mismatch');
+        System.assertEquals('Customer 1', saleOrder.dmpl__AccountName__c, 'Account Name mismatch');
+        System.assertEquals('MG Road', saleOrder.dmpl__BillingStreet__c, 'Billing Street mismatch');
+        System.assertEquals('Pune', saleOrder.dmpl__BillingCity__c, 'Billing City mismatch');
+        System.assertEquals('Maharashtra', saleOrder.dmpl__BillingState__c, 'Billing State mismatch');
+        System.assertEquals('India', saleOrder.dmpl__BillingCountry__c, 'Billing Country mismatch');
+        System.assertEquals('411001', saleOrder.dmpl__BillingPostalCode__c, 'Billing Postal Code mismatch'); 
+        System.assertEquals('Ring Rd', saleOrder.dmpl__ShippingStreet__c, 'Shipping Street mismatch');
+        System.assertEquals('Nagpur', saleOrder.dmpl__ShippingCity__c, 'Shipping City mismatch');
 
 
-    //Invalid scenario
+        dmpl__SaleOrderLine__c saleOrderLine = SaleOrderDataHelper.createSaleOrderLine(saleOrder.Id, item5.Id,10,null);
+        System.assertNotEquals(null, saleOrderLine.Id, 'sale Order Line should be created');
+        System.assertEquals(10, saleOrderLine.dmpl__Quantity__c, 'Quantity should be 2');
+        System.assertEquals(saleOrder.Id, saleOrderLine.dmpl__SaleOrderId__c, 'saleOrder should be match');
+        System.assertEquals(item5.Id, saleOrderLine.dmpl__ItemId__c, 'Item should be Item 5');
 
-    // @isTest
-    // static void updateSubscriptionWithRemovingNoRequiredSKUPositive(){
+        dmpl__Subscription__c subscription = SubscriptionDataHelper.createSubscription(partnerAccount1,customerAccount1,branch1,item5,2,saleOrder,null,null);
+        System.assertNotEquals(null, subscription.Id, 'subscription should be created');
+        System.assertEquals(customerAccount1.Id, subscription.dmpl__AccountId__c, 'Account should be Customer 1');
+        System.assertEquals(partnerAccount1.Id, subscription.dmpl__PartnerAccountId__c, 'Partner Account should be Partner 1');
+        System.assertEquals(branch1.Id, subscription.dmpl__BranchId__c, 'Branch should be Branch 1');
+        System.assertEquals(item5.Id, subscription.dmpl__ItemId__c, 'Item should be Item 5');
+        System.assertEquals(2, subscription.dmpl__Quantity__c, 'Quantity should be 2');
+        System.assertEquals(saleOrder.Id, subscription.dmpl__SaleOrderId__c, 'saleOrder should be match');
 
-    //     Test.startTest();
-    //     Account customerAccount1 = TestDataHelpers.getCustomerAccount('Customer 1');
-    //     Account partnerAccount1=TestDataHelpers.getPartnerAccount('Partner 1');
-    //     dmpl__Branch__c branch1=TestDataHelpers.getBranch('Branch 1');
-    //     dmpl__Item__c item1=TestDataHelpers.getItem('Item 1');
-    //     dmpl__Item__c item9=TestDataHelpers.getItem('Item 9');
-    //     dmpl__SKU__c sku3 = TestDataHelpers.getSKU('SKU 3');
+        Boolean exceptionThrown = false;
+        try{
+            subscription.dmpl__SaleOrderLineId__c= saleOrderLine.Id;
+            update subscription;
+        }catch(Exception e){
+            exceptionThrown=true;
+        }
+        System.assertEquals(false, exceptionThrown,'Exception caught while assigning sale order line to subscription');
+        Test.stopTest();
 
-    //     dmpl__SaleOrder__c saleOrder = SaleOrderDataHelper.createSaleOrder(customerAccount1.Id, partnerAccount1.Id, branch1.Id,null,null,true,null); 
-
-    //     dmpl__Subscription__c subscription = SubscriptionDataHelper.createSubscription(partnerAccount1,customerAccount1,branch1,item9,2,saleOrder,sku3,null,null);
-
-    //     System.assertNotEquals(null, subscription.Id, 'subscription should be created');
-    //     System.assertEquals(customerAccount1.Id, subscription.dmpl__AccountId__c, 'Account should be Customer 1');
-    //     System.assertEquals(partnerAccount1.Id, subscription.dmpl__PartnerAccountId__c, 'Partner Account should be Partner 1');
-    //     System.assertEquals(branch1.Id, subscription.dmpl__BranchId__c, 'Branch should be Branch 1');
-    //     System.assertEquals(item9.Id, subscription.dmpl__ItemId__c, 'Item should be Item 9');
-    //     System.assertEquals(sku3.Id, subscription.dmpl__SKUId__c, 'sku should be sku 3');
-    //     System.assertEquals(2, subscription.dmpl__Quantity__c, 'Quantity should be 2');
-    //     System.assertEquals(saleOrder.Id, subscription.dmpl__SaleOrderId__c, 'saleOrder should be match');
-
-        
-    //     Boolean exceptionThrown = false;
-    //     try{
-    //         subscription.dmpl__ItemId__c = item1.Id;
-    //         subscription.dmpl__SKUId__c = null;
-    //         update subscription;
-    //     }catch (Exception e) {
-    //         exceptionThrown = true;
-    //     }
-    //     System.assertEquals(false, exceptionThrown,'exception caught when removing no required sku');
-
-        
-    // }
+    }
 
 
     @isTest
-    static void createSubscriptionWithZeroQuantityNegative(){
+    static void createSubscriptionWithZeroQuantityPositive(){
         Account customerAccount1 = TestDataHelpers.getCustomerAccount('Customer 1');
         Account partnerAccount1=TestDataHelpers.getPartnerAccount('Partner 1');
         dmpl__Branch__c branch1=TestDataHelpers.getBranch('Branch 1');
@@ -829,7 +787,7 @@ public with sharing class SubscriptionHandler_Test {
 
 
     @isTest
-    static void updateSubscriptionWithZeroQuantityNegative(){
+    static void updateSubscriptionWithZeroQuantityPositive(){
 
         Test.startTest();
         Account customerAccount1 = TestDataHelpers.getCustomerAccount('Customer 1');

@@ -82,8 +82,6 @@ public class RepairOrderTestDataHelpers {
         );
     }
 
-    
-
     public static dmpl__RepairOrderLine__c createRepairOrderLine(dmpl__RepairOrder__c repairOrder,
     dmpl__Item__c item,
     dmpl__SKU__c sku, 
@@ -354,7 +352,7 @@ public class RepairOrderTestDataHelpers {
             new dmpl__RepairOrder__c(
                 dmpl__BranchId__c = branch.Id,
                 dmpl__AccountId__c = customerAccount.Id,
-                dmpl__PartnerAccountId__c = branch.dmpl__PartnerAccountId__c,
+                dmpl__PartnerAccountId__c = partnerAccount.Id,
                 dmpl__UsageReading__c = usageReading,
                 dmpl__DocumentDate__c = Date.today(),
                 dmpl__Status__c = 'Draft'
@@ -390,7 +388,6 @@ public class RepairOrderTestDataHelpers {
             Name,
             dmpl__RepairOrderId__c ,
             dmpl__AssetServiceContractId__c,
-            dmpl__ItemServiceContractId__c,
                 dmpl__ItemId__c ,
                 dmpl__TaxGroupId__c ,
                 dmpl__Quantity__c ,dmpl__QuoteLineId__c,
@@ -496,25 +493,7 @@ public class RepairOrderTestDataHelpers {
             true
         );
     }
-
-    public static dmpl__RepairOrderTax__c createRepairOrderTaxWithoutRepairOrderLineReference(dmpl__RepairOrder__c repairOrder,
-        dmpl__TaxGroup__c taxGroup,
-        String taxName,
-        Decimal taxRate){
-
-
-            return (dmpl__RepairOrderTax__c) TestFactory.createSObject(
-            new dmpl__RepairOrderTax__c(
-                dmpl__RepairOrderId__c     = repairOrder.Id,
-                dmpl__TaxGroupId__c        = taxGroup.Id,
-                dmpl__TaxName__c           = taxName,
-                dmpl__TaxRate__c           = taxRate
-            ),
-            true
-        );
-        }
-
-    public static dmpl__RepairOrderTax__c getRepairOrderTaxesById(Id TaxId) {
+    public static List<dmpl__RepairOrderTax__c> getRepairOrderTaxesById(Id TaxId) {
         return [
             SELECT
                 Id,
@@ -527,7 +506,6 @@ public class RepairOrderTestDataHelpers {
                 dmpl__TaxId__c
             FROM dmpl__RepairOrderTax__c
             WHERE Id = :TaxId
-            LIMIT 1
         ];
     }
 
@@ -589,9 +567,7 @@ public class RepairOrderTestDataHelpers {
     Account account,
     Decimal usageReading,
     Asset asset,
-    dmpl__TaxGroup__c taxGroup,
-    dmpl__ContactAddress__c billingAddress,
-    dmpl__ContactAddress__c shippingAddress
+    dmpl__TaxGroup__c taxGroup
 ) {
     return (dmpl__RepairOrder__c) TestFactory.createSObject(
         new dmpl__RepairOrder__c(
@@ -601,8 +577,6 @@ public class RepairOrderTestDataHelpers {
             dmpl__UsageReading__c = usageReading,
             dmpl__AssetId__c = asset?.Id,
             dmpl__TaxGroupId__c = taxGroup?.Id,
-            dmpl__BillingAddressId__c = billingAddress?.Id,
-            dmpl__ShippingAddressId__c = shippingAddress?.Id,
             dmpl__DocumentDate__c = Date.today(), 
             dmpl__Status__c = 'Draft'
         ),
@@ -614,6 +588,7 @@ public static dmpl__RepairOrder__c getRepairOrderById(Id repairOrderId) {
     return [
         SELECT
             Id,
+			dmpl__PriceListId__c,
             dmpl__PartnerAccountId__c,
             dmpl__BranchId__c,
             dmpl__AccountId__c,

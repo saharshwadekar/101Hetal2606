@@ -63,6 +63,25 @@ public with sharing class TransferTestDataHelper {
             true
         );
     }
+    public static dmpl__TransferInwardLine__c createTransferInwardLine(
+        Id transferId,
+        Id outwardId,
+        Id branchId,
+        Id itemId,
+        Integer quantity) {
+        return (dmpl__TransferInwardLine__c) TestFactory.createSObject(
+            new dmpl__TransferInwardLine__c(
+                dmpl__TransferId__c = transferId,
+                dmpl__TransferOutwardLineId__c = outwardId,
+                dmpl__BranchId__c = branchId,
+                dmpl__ItemId__c = itemId,
+                dmpl__Quantity__c = quantity
+                
+            ),
+            'TransferInwardLineDefaults',
+            true
+        );
+    }
 
     public static dmpl__TransferInwardLine__c createTransferInwardLine(dmpl__TransferOutwardLine__c transferOutwardLine ,dmpl__Transfer__c transfer,dmpl__Branch__c branch) {
         return (dmpl__TransferInwardLine__c) TestFactory.createSObject(
