@@ -69,4 +69,17 @@ public with sharing class ChecklistTemplateTestDataHelpers {
             LIMIT 1
         ];
     }
+    public static dmpl__ChecklistTemplate__c createChecklistTemplateWithIds(dmpl__Resource__c resource, dmpl__Item__c item, Account partnerAccount, Account account, dmpl__AccountGroup__c accountGroup) {
+        return (dmpl__ChecklistTemplate__c) TestFactory.createSObject(
+            new dmpl__ChecklistTemplate__c(
+                                            dmpl__ResourceId__c = resource?.Id,
+                                            dmpl__ItemId__c = item?.Id,
+                                            dmpl__PartnerAccountId__c = partnerAccount?.Id,
+                                            dmpl__AccountId__c = account?.Id,
+                                            dmpl__AccountGroupId__c = accountGroup?.Id
+                                            ),
+            'ChecklistTemplateDefaults',
+            true
+        );
+    }
 }

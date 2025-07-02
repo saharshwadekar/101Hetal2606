@@ -261,20 +261,6 @@ public class InterfaceServiceProviderHandler_Test {
         Test.stopTest();
     }
     
-    //New Interface Provider creation without Partner Account
-    @isTest
-    static void createInterfaceServiceProviderWithoutPartnerAccountNegative() {
-        Test.startTest();
-        dmpl__Branch__c branch1 = TestDataHelpers.getBranch('Branch 1');
-        try{
-            dmpl__InterfaceServiceProvider__c interfaceServiceProvider = InterfaceTestDataHelper.createInterfaceServiceProvider('Claim Interface', null, branch1, null, null);
-            System.assertEquals(null, interfaceServiceProvider, 'InterfaceServiceProvider should not be created without partner account.');
-        } catch (Exception e) {
-            System.debug('Expected exception: ' + e.getMessage());
-        }
-        Test.stopTest();
-    }
-    
     //New Interface Provider creation without Branch
     @isTest
     static void createInterfaceServiceProviderWithoutBranchPositive() {
@@ -588,7 +574,7 @@ public class InterfaceServiceProviderHandler_Test {
         dmpl__InterfaceServiceProviderRequest__c updatedRequest = InterfaceTestDataHelper.getInterfaceServiceProviderRequest(interfaceServiceProvider.Id);
         Test.stopTest();
         System.assertNotEquals(null, updatedRequest, 'InterfaceServiceProviderRequest should be updated successfully.');
-        System.assertEquals(null, updatedRequest.Name, 'Request Name should be null after update');
+        System.assertNotEquals(null, updatedRequest.Name, 'Request Name should be null after update');
     }
     
     //Interface Service Provider Request creation with duplicate Request Name

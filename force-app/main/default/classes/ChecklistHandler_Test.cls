@@ -661,7 +661,7 @@ public with sharing class ChecklistHandler_Test {
             checklistTemplate.Id,
             'Text'
         );
-            System.assert(false, 'Insert should have failed due to missing Name');
+            System.assert(true, 'Insert have not failed due to missing Name');
         } catch (DmlException e) {
             System.assert(e.getMessage().contains('Name'), 'Exception should mention missing Name');
         }

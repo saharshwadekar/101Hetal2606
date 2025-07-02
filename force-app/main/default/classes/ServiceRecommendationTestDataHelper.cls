@@ -41,6 +41,7 @@ public with sharing class ServiceRecommendationTestDataHelper {
                 dmpl__QuoteLineId__c,
                 dmpl__RepairOrderLineId__c,
                 dmpl__QuoteId__c,
+                dmpl__Quantity__c,
                 dmpl__ItemId__c,
                 dmpl__ComplaintLineId__c,
                 dmpl__ComplaintItemId__c,
@@ -67,6 +68,8 @@ public with sharing class ServiceRecommendationTestDataHelper {
                 dmpl__QuoteId__c,
                 dmpl__ItemId__c,
                 dmpl__ComplaintLineId__c,
+                dmpl__Quantity__c,
+                dmpl__ChecklistLineId__c,
                 dmpl__ComplaintItemId__c,
                 dmpl__AssetId__c
             FROM dmpl__ServiceRecommendation__c 

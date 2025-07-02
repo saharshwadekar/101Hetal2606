@@ -155,7 +155,7 @@ public static dmpl__ClaimReconciliation__c createClaimReconciliationWithCreditNo
                 dmpl__ClaimType__c = claimType,
                 dmpl__Status__c = status
             ),
-            //'ClaimDefaults',
+            'ClaimDefaults',
             true
         );
     }
@@ -199,7 +199,7 @@ public static dmpl__ClaimReconciliation__c createClaimReconciliationWithCreditNo
                 dmpl__ApproveQuantity__c = approveQuantity,
                 dmpl__ApprovedAmount__c  = approvedAmount
             ),
-            'ClaimReconciliationLineDefaults',
+           // 'ClaimReconciliationLineDefaults',
             true
         );
     }
@@ -208,6 +208,7 @@ public static dmpl__ClaimReconciliation__c createClaimReconciliationWithCreditNo
         return [
             SELECT Id,
                 Name,
+                dmpl__ReconciliationId__c,
                 dmpl__ClaimId__c,
                 dmpl__ClaimLineId__c,
                 dmpl__ItemId__c,

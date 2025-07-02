@@ -136,7 +136,7 @@ public with sharing class ServiceBayHandler_Test {
     }
 
     @isTest
-    static void createServiceBayWithoutBranchNegative() {
+    static void createServiceBayWithoutBranchPositive() {
         String serviceBayName = 'SBN2';
         String serviceBayType = 'Warehouse';
 

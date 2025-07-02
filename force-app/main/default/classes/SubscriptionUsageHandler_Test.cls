@@ -17,8 +17,8 @@ public with sharing class SubscriptionUsageHandler_Test {
         dmpl__PriceList__c priceList = TestDataHelpers.createPriceList(partnerAccount, branch);
         dmpl__PriceListRules__c priceListRule = TestDataHelpers.createPriceListRules(priceList, item);
         dmpl__SaleOrder__c saleOrder = SaleOrderDataHelper.createSaleOrder(customerAccount, branch, contactAddress, priceList);
-        dmpl__SaleInvoice__c saleInvoice = SaleInvoiceTestDataHelpers.createSaleInvoice(customerAccount, branch, saleOrder, priceList);
-        dmpl__SaleInvoiceLine__c saleInvoiceLine = SaleInvoiceTestDataHelpers.createSaleInvoiceLine(saleInvoice, item, sku, itemLot, taxGroup, priceListRule);
+        dmpl__SaleInvoice__c saleInvoice = SaleInvoiceDataHelper.createSaleInvoice(customerAccount, branch, saleOrder, priceList);
+        dmpl__SaleInvoiceLine__c saleInvoiceLine = SaleInvoiceDataHelper.createSaleInvoiceLine(saleInvoice, item, sku, itemLot, taxGroup, priceListRule);
         dmpl__SubscriptionUsage__c usage = SubscriptionUsageDataHelper.createSubscriptionUsage(acc, saleInvoiceLine);
         dmpl__Subscription__c subscription = SubscriptionDataHelper.createSubscription(partnerAccount,customerAccount,branch,item,2,saleOrder,null,null);
 

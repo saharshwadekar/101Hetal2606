@@ -293,7 +293,7 @@ static void CreateServiceRecommendationWithChecklistLinePositive() {
 }
 
     @isTest
-static void UpdateServiceRecommendationWithChecklistLine() {
+static void UpdateServiceRecommendationWithChecklistLinePositive() {
     dmpl__Item__c item1 = TestDataHelpers.getItem('Item 1');
     dmpl__Item__c item8 = TestDataHelpers.getItem('Item 8');
     dmpl__CheckListLines__c checklistLine1 = ChecklistDataHelper.createChecklistLine('Checklist line 1');
@@ -315,9 +315,5 @@ static void UpdateServiceRecommendationWithChecklistLine() {
     System.assertEquals(1, updatedRecommendation.dmpl__Quantity__c, 'Quantity should remain 1');
     System.assertEquals(checklistLine2.Id, updatedRecommendation.dmpl__ChecklistLineId__c, 'Checklist line should remain Checklist line 1');
 }
-// Service Recommendation Rule creation with Checklist line template (New)
-
-
-
 
 }

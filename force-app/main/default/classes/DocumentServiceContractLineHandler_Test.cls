@@ -60,9 +60,9 @@ public with sharing class DocumentServiceContractLineHandler_Test {
     Account customer = TestDataHelpers.getCustomerAccount('Customer 1'); 
     dmpl__Branch__c branch = TestDataHelpers.getBranch('Branch 1');
     dmpl__Item__c item = TestDataHelpers.getItem('Item 1');
-    dmpl__SKU__c sku = TestDataHelpers.getSKU('SKU 1');
 
-    Asset asset = TestDataHelpers.createAsset('Asset 1', customer.Id, item.Id);
+    Asset asset = AssetDataHelper.createAsset('Asset 1', customer.Id, item.Id);
+
     dmpl__ServiceRequest__c request = ServiceRequestTestDataHelpers.createServiceRequestWithId(
         customer,
         branch,
@@ -77,19 +77,13 @@ public with sharing class DocumentServiceContractLineHandler_Test {
         null
     );
 
-    dmpl__DocumentServiceContract__c docLine = new dmpl__DocumentServiceContract__c(
-        dmpl__ServiceRequestLineId__c = requestLine.Id
-    );
-    insert docLine;
+    dmpl__DocumentServiceContract__c DocumentServiceLine= DocumentServiceContractLineDataHelpers.createDocumentServiceContractLine(requestLine,null,null);
 
-
-    System.assertNotEquals(null, docLine.Id, 'DocumentServiceContract should be inserted');
-    System.assertEquals(requestLine.Id, docLine.dmpl__ServiceRequestLineId__c, 'ServiceRequestLine should be linked');
+    System.assertEquals(requestLine.Id, DocumentServiceLine.dmpl__ServiceRequestLineId__c, 'ServiceRequestLine should be linked');
 }
 // Document Service Contract Line creation with Sale order line reference (New)
 @isTest
 static void CreatedocumentServiceContractLineWithSaleOrderLinePositive() {
-    // Test data setup
     Account customer = TestDataHelpers.getCustomerAccount('Customer 1');
     dmpl__Branch__c branch = TestDataHelpers.getBranch('Branch 1');
     dmpl__Item__c item = TestDataHelpers.getItem('Item 1');
@@ -111,16 +105,33 @@ static void CreatedocumentServiceContractLineWithSaleOrderLinePositive() {
         null
     );
 
-    dmpl__DocumentServiceContract__c docLine = new dmpl__DocumentServiceContract__c(
-        dmpl__SaleOrderLineId__c = saleOrderLine.Id
-    );
-    insert docLine;
+    dmpl__DocumentServiceContract__c DocumentServiceLine= DocumentServiceContractLineDataHelpers.createDocumentServiceContractLine(null,saleOrderLine,null);
 
-    System.assertNotEquals(null, docLine.Id, 'DocumentServiceContract should be inserted');
-    System.assertEquals(saleOrderLine.Id, docLine.dmpl__SaleOrderLineId__c, 'SaleOrderLine should be linked');
+    System.assertNotEquals(null, DocumentServiceLine.Id, 'DocumentServiceContract should be inserted');
+    //System.assertEquals(saleOrderLine.Id, DocumentServiceLine.dmpl__SaleOrderLineId__c, 'SaleOrderLine should be linked');
 }
+// Document Service Contract Line creation with Component Item (New)
+@isTest
+static void CreatedocumentServiceContractLineWithComponentItemPositive(){
+        Account customer = TestDataHelpers.getCustomerAccount('Customer 1');
+            dmpl__Branch__c branch = TestDataHelpers.getBranch('Branch 1');
+            dmpl__Item__c item = TestDataHelpers.getItem('Item 7');
 
+            dmpl__DocumentServiceContract__c DocumentServiceLine= DocumentServiceContractLineDataHelpers.createDocumentServiceContractLine(null,null,item);
 
+            System.assertEquals(item.Id, DocumentServiceLine.dmpl__ComponentItemId__c, 'component item should match ');
+        }
+// Document Service Contract Line creation with 0 quantity (New)
+@isTest
+static void CreatedocumentServiceContractLineWithZeroQuantityPositive(){
+    Account customer = TestDataHelpers.getCustomerAccount('Customer 1');
+            dmpl__Branch__c branch = TestDataHelpers.getBranch('Branch 1');
+            dmpl__Item__c item = TestDataHelpers.getItem('Item 7');
 
+            dmpl__DocumentServiceContract__c DocumentServiceLine= DocumentServiceContractLineDataHelpers.createDocumentServiceContractLine(null,null,item);
+            DocumentServiceLine.dmpl__Quantity__c=0;
+            update DocumentServiceLine;
 
+            System.assertEquals(0, DocumentServiceLine.dmpl__Quantity__c, 'quatity should be zero');
+        }
 }

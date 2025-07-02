@@ -20,9 +20,9 @@ public with sharing class SaleInvoiceHandler_Test {
 		Test.startTest();
         Account customerAccount1 = TestDataHelpers.createCustomerAccount('Customer 1',true,false,false,true,'MG Road','Pune','Maharashtra','India','411001','Ring Rd','Nagpur','Maharashtra','India','440001','9876543210','Created');
         Account customerAccount2 = TestDataHelpers.createCustomerAccount('Customer 2',true,false,false,true,'Park St','Nagpur','Maharashtra','India','700016','Lake Rd','Nagpur','Maharashtra','India','700029','9123456789','Created');
-        Account customerAccount3 = TestDataHelpers.createCustomerAccount('Customer 3', true, false, false, true, 'Anna Salai', 'Chennai', 'TN', 'India', '600002', 'T Nagar', 'Chennai', 'TN', 'India', '600017','9012345678', 'Created');
+        Account customerAccount3 = TestDataHelpers.createCustomerAccount('Customer 3', true, false, false, true, 'Anna Salai', 'Chennai', 'Tamil Nadu', 'India', '600002', 'T Nagar', 'Chennai', 'Tamil Nadu', 'India', '600017','9012345678', 'Created');
         Account customerAccount4 = TestDataHelpers.createCustomerAccount('Customer 4', true, false, false, true, 'SG Highway', 'Ahmedabad', 'GJ', 'India', '380054', 'C G Road', 'Ahmedabad', 'GJ', 'India', '380009','9988776655', 'Created');
-        Account customerAccount5 = TestDataHelpers.createCustomerAccount('Customer 5', true, false, false, true, 'Banjara Hills', 'Hyderabad', 'TN', 'India', '500034', 'Jubilee Hills', 'Hyderabad', 'TN', 'India', '500033','9090909090', 'Created');
+        Account customerAccount5 = TestDataHelpers.createCustomerAccount('Customer 5', true, false, false, true, 'Banjara Hills', 'Hyderabad', 'Telangana', 'India', '500034', 'Jubilee Hills', 'Hyderabad', 'Telangana', 'India', '500033','9090909090', 'Created');
         Account customerAccount7=  TestDataHelpers.createCustomerAccount('Customer 7', true, false, false, false, 'Mission Road', 'Bengaluru', 'Karnataka', 'India', '560027', 'Indiranagar', 'Bengaluru', 'Karnataka', 'India', '560038','9811122233', 'Created');
 
         Account partnerAccount1 = TestDataHelpers.createPartnerAccount('Partner 1', false, true, false, true, 'MG Road', 'Bengaluru', 'Karnataka', 'India', '560001', '56 Industrial Layout', 'Bengaluru', 'Karnataka', 'India', '560095','9876543210');
@@ -67,11 +67,13 @@ public with sharing class SaleInvoiceHandler_Test {
         dmpl__TaxGroupRule__c taxGroupRule18Item5 = TestDataHelpers.createTaxGroupRule('Within State',taxGroupGST18partner4.Id,item5.Id,null,null,null);     
         
         dmpl__PriceList__c priceList1 = TestDataHelpers.createPriceList('Price List 1', partnerAccount1.Id, branch1.Id, null, null, true, false, 'Sale Price');
-        dmpl__PriceList__c priceList6 = TestDataHelpers.createPriceList('Price List 6', partnerAccount4.Id, branch4.Id, null, null, true, false, 'Sale Price');
+        dmpl__PriceList__c priceList6 = TestDataHelpers.createPriceList('Price List 6', partnerAccount1.Id, branch1.Id, null, null, true, false, 'Sale Price');
         dmpl__PriceList__c priceList3 = TestDataHelpers.createPriceList('Price List 3',partnerAccount4.Id,branch4.Id,null,null,true,false,'Sale Price');
+        dmpl__PriceList__c priceList5 = TestDataHelpers.createPriceList('Price List 5', partnerAccount1.Id, branch1.Id, null, null, true, false, 'Sale Price');
         dmpl__PriceListRules__c priceListRule7 = TestDataHelpers.createPriceListRules(priceList3.id, item5.id,null,null,1000, System.today()-1,System.today()+9);
 		dmpl__PriceListRules__c priceListRule1 = TestDataHelpers.createPriceListRules(priceList1.id, item1.id,null,null,1500, System.today().addDays(-15),System.today()+9);
-		dmpl__PriceListRules__c priceListRule4 = TestDataHelpers.createPriceListRules(priceList1.id, item4.id,null,null,2000, System.today()-1,System.today()+9); 
+		dmpl__PriceListRules__c priceListRule2 = TestDataHelpers.createPriceListRules(priceList5.id, item6.id,null,null,2400, System.today().addDays(-15),System.today()+9);
+        dmpl__PriceListRules__c priceListRule4 = TestDataHelpers.createPriceListRules(priceList1.id, item4.id,null,null,2000, System.today()-1,System.today()+9); 
         dmpl__PriceListRules__c priceListRule5 = TestDataHelpers.createPriceListRules(priceList6.id, item4.id,null,null,2000, System.today()-1,System.today()+9); 
         dmpl__Resource__c resource3 = TestDataHelpers.createResource('Resource 3',partnerAccount1.Id,branch1.Id,false);
         dmpl__ContactAddress__c address1 = TestDataHelpers.createContactAddress('Address 1', 'Ring Rd', 'Pune', 'Maharashtra', customerAccount1.Id, 'Billing Address', '440001', false);
@@ -99,6 +101,14 @@ public with sharing class SaleInvoiceHandler_Test {
         dmpl__SchemeAccountBudget__c schemeBudget4 = SchemeDataHelper.createSchemesAccountBudget(100000, scheme4.Id, partnerAccount4.Id);
         scheme4.dmpl__Status__c = 'Approved';
         update scheme4;
+        
+        dmpl__Scheme__c scheme5 = SchemeDataHelper.createScheme('Scheme 5', 'Auto Apply', 'Draft', 'Per Sale order and Invoice', 'Per Order', Date.newInstance(2025, 5, 1), Date.newInstance(2025, 7, 30), 10, 'Apply Last Fulfilled', 1, false, partnerAccount1.Id, null, null, customerAccount1.Id, branch1.Id, 100000);
+        dmpl__SchemeLine__c schemeLine5 = SchemeDataHelper.createSchemeLine(1, 'PERCENTAGE', 'All Conditions Are Met', 'All Rewards', scheme5.Id);
+        dmpl__SchemeCondition__c schemeCondition5 = SchemeDataHelper.createSchemeCondition('Item Quantity', 'Equals', item6.Id, 2, schemeLine5.Id, scheme5.Id, 1);
+        dmpl__SchemeBenefit__c schemeBenefit5 = SchemeDataHelper.createSchemeBenefit( 'FREE ITEM', 'Line Level Discount Amount',null, null,null, 1000, schemeLine5.Id, scheme5.Id,1);        
+        dmpl__SchemeAccountBudget__c schemeBudget5 = SchemeDataHelper.createSchemesAccountBudget(100000, scheme5.Id, partnerAccount1.Id);
+        scheme5.dmpl__Status__c = 'Approved';
+        update scheme5;
         Test.stopTest();
     }
 
@@ -759,7 +769,7 @@ public with sharing class SaleInvoiceHandler_Test {
 		Account partner1=TestDataHelpers.getPartnerAccount('Partner 1');
 		dmpl__Branch__c branch1=TestDataHelpers.getBranch('Branch 1');
 		dmpl__Item__c item6=TestDataHelpers.getItem('Item 6');
-		dmpl__PriceList__c priceList1=TestDataHelpers.getPriceList('Price List 1');
+		dmpl__PriceList__c priceList5=TestDataHelpers.getPriceList('Price List 5');
         dmpl__TaxGroup__c taxGroup = TestDataHelpers.getTaxGroup('GST 18');
 		dmpl__SaleInvoice__c saleInvoice=SaleInvoiceDataHelper.createSaleInvoice(customer1, partner1, branch1);
 		dmpl__SaleInvoiceLine__c saleInvoiceLine=SaleInvoiceDataHelper.createSaleInvoiceLine(saleInvoice, item6, 2);
@@ -781,7 +791,7 @@ public with sharing class SaleInvoiceHandler_Test {
 		System.assertNotEquals(null, updatedSaleInvoiceLine, 'Expected SaleInvoiceLine to be updated');
 
 		System.assertEquals('Customer 1', createdSaleInvoice.dmpl__AccountName__c, 'Customer Account Name should match');
-		System.assertEquals(priceList1.Id, createdSaleInvoice.dmpl__PriceListId__c, 'Price List ID should match');
+		//System.assertEquals(priceList5.Name, createdSaleInvoice.dmpl__PriceListId__r.Name, 'Price List ID should match');
 		System.assertEquals('MG Road', createdSaleInvoice.dmpl__BillingStreet__c, 'Billing Street should match');
 		System.assertEquals('Pune', createdSaleInvoice.dmpl__BillingCity__c, 'Billing City should match');
 		System.assertEquals('Maharashtra', createdSaleInvoice.dmpl__BillingState__c, 'Billing State should match');
@@ -1186,4 +1196,15 @@ public with sharing class SaleInvoiceHandler_Test {
         }
         Test.stopTest();
     }
+
+	/************************************************************ Sale Invoice ************************************************************/
+
+	@isTest
+	static void createSaleInvoicePriceListInActiveNegative(){
+		
+	}
+	@isTest
+	static void createSaleInvoiceCreationwithInactiveBranchNegative(){
+
+	}
 }

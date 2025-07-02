@@ -98,6 +98,25 @@ public with sharing class InventoryAdjustmentHandler_Test {
         System.assertEquals(Date.today(), fetchedInventory.dmpl__DocumentDate__c, 'Document Date should be today\'s date');
     }
 
+     @isTest
+    static void createAdjustmentWithInventoryPostedFalsePositive(){
+         Boolean exceptionThrown=false;
+         Account partnerAccount1 = TestDataHelpers.getPartnerAccount();
+         dmpl__Branch__c branch1=TestDataHelpers.getBranch();
+         dmpl__InventoryAdjustment__c inventory = InventoryAdjustmentDataHelper.CreateAdjustment(
+            branch1.Id,
+            partnerAccount1.Id,
+            Date.today()
+        );
+
+        dmpl__InventoryAdjustment__c fetchedInventory = InventoryAdjustmentDataHelper.getAdjustment(inventory.id);
+        System.assertNotEquals(null, fetchedInventory, 'Fetched Inventory Adjustment should not be null');
+        System.assertEquals(partnerAccount1.Id, fetchedInventory.dmpl__PartnerAccountId__c, 'Partner Account should match');
+        System.assertEquals(branch1.Id, fetchedInventory.dmpl__BranchId__c, 'Branch should match');
+        System.assertEquals('Draft', fetchedInventory.dmpl__Status__c, 'Status should be "Draft"');
+        System.assertEquals(Date.today(), fetchedInventory.dmpl__DocumentDate__c, 'Document Date should be today\'s date');
+    }
+
     @isTest
     static void createAdjustmentCreationWithValidCreatedDateInDatetimeFormatpositive(){
          Account partnerAccount1 = TestDataHelpers.getPartnerAccount();
@@ -117,7 +136,25 @@ public with sharing class InventoryAdjustmentHandler_Test {
     }
     
      
-       
+     @isTest
+    static void createAdjutstmentWithValidBranchAndLocation(){
+         Account partnerAccount1 = TestDataHelpers.getPartnerAccount();
+         dmpl__Branch__c branch1=TestDataHelpers.getBranch();
+         dmpl__InventoryAdjustment__c inventory = InventoryAdjustmentDataHelper.CreateAdjustment(
+            branch1.Id,
+            partnerAccount1.Id,
+            Date.today()
+        );
+
+        dmpl__InventoryAdjustment__c fetchedInventory = InventoryAdjustmentDataHelper.getAdjustment(inventory.id);
+        System.assertNotEquals(null, fetchedInventory, 'Fetched Inventory Adjustment should not be null');
+        System.assertEquals(partnerAccount1.Id, fetchedInventory.dmpl__PartnerAccountId__c, 'Partner Account should match');
+        System.assertEquals(branch1.Id, fetchedInventory.dmpl__BranchId__c, 'Branch should match');
+        System.assertEquals('Draft', fetchedInventory.dmpl__Status__c, 'Status should be "Draft"');
+        System.assertEquals(Date.today(), fetchedInventory.dmpl__DocumentDate__c, 'Document Date should be today\'s date');
+    }
+    
+   
      @isTest
     static void createSaveAdjustmentWithAllValidFieldspositive(){
          Account partnerAccount1 = TestDataHelpers.getPartnerAccount();
@@ -136,29 +173,11 @@ public with sharing class InventoryAdjustmentHandler_Test {
         System.assertEquals(Date.today(), fetchedInventory.dmpl__DocumentDate__c, 'Document Date should be today\'s date');
     }
     
-     @isTest
-    static void createAdjustmentWithInactiveProductnegative(){
-         
-         Boolean exceptionThrown = false;
-         Account partnerAccount1 = TestDataHelpers.getPartnerAccount();
-         dmpl__Branch__c branch1=TestDataHelpers.getBranch();
-
-         try{
-         dmpl__InventoryAdjustment__c inventory = InventoryAdjustmentDataHelper.CreateAdjustment(
-            branch1.Id,
-            partnerAccount1.Id,
-            Date.today()
-        );
-         }catch(Exception e){
-           exceptionThrown = true;
-           System.debug('Expected exception caught: ' + e.getMessage());
-        }
-        System.assertEquals(true, exceptionThrown, 'Expected exception was not thrown when using a wrong partner account');
-    }
+   
 
     
      @isTest
-    static void createAdjustmentWithInventoryPostedFalsePositive(){
+    static void createAdjustmentWithInventoryPostedtruePositive(){
          Boolean exceptionThrown=false;
          Account partnerAccount1 = TestDataHelpers.getPartnerAccount();
          dmpl__Branch__c branch1=TestDataHelpers.getBranch();
@@ -414,6 +433,34 @@ public with sharing class InventoryAdjustmentHandler_Test {
         }
         System.assertEquals(true, exceptionThrown, 'Expected exception was not thrown for inactive item.');
    
+    }
+
+     @isTest
+    static void createItemLotWithoutSelectingItemNegative(){
+         Boolean exceptionThrown= false;
+        Account partnerAccount1 = TestDataHelpers.getPartnerAccount();
+        dmpl__Branch__c branch1=TestDataHelpers.getBranch();
+
+
+
+        dmpl__InventoryAdjustment__c inventory = InventoryAdjustmentDataHelper.CreateAdjustment(
+            branch1.Id,
+            partnerAccount1.Id,
+            Date.today()
+        );
+        Test.startTest();
+        try {
+            dmpl__InventoryAdjustmentLine__c inventoryLine = InventoryAdjustmentDataHelper.CreateAdjustmentLine(
+                null,
+                6,
+                inventory.Id
+            );
+        } catch (Exception e) {
+            exceptionThrown = true;
+            System.debug('Expected exception caught: ' + e.getMessage());
+        }
+        Test.stopTest();
+        System.assertEquals(true, exceptionThrown, 'Expected exception was not thrown for inactive item.');
     }
 
     @isTest

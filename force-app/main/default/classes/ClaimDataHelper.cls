@@ -14,7 +14,7 @@ public with sharing class ClaimDataHelper {
                 dmpl__WorkOrderAsonDate__c = Date.today().addDays(-5),
                 dmpl__PartnerAccountId__c = partnerAccountId
             ),
-            'ClaimDefaults',
+            //'ClaimDefaults',
             true
         );
     }
@@ -53,7 +53,7 @@ public with sharing class ClaimDataHelper {
                 dmpl__UnitPrice2__c = 1000,
                 dmpl__UnitPrice__c = 900
             ),
-            'ClaimLineDefaults',
+            //'ClaimLineDefaults',
             true
         );
     }
@@ -64,7 +64,7 @@ public with sharing class ClaimDataHelper {
                    dmpl__ItemCode__c, dmpl__UnitPrice2__c, dmpl__UnitPrice__c,
                    dmpl__ApproveAmount__c, dmpl__ApproveBaseAmount__c, dmpl__ApproveDiscount__c,
                    dmpl__ApproveDiscountAmount__c, dmpl__ApproveNetDiscount__c, dmpl__ApproveQuantity__c,
-                   dmpl__BaseAmount__c, dmpl__ClaimAmount__c, dmpl__ClaimQuantity__c,
+                   dmpl__BaseAmount__c, dmpl__ClaimAmount__c, dmpl__ClaimQuantity__c,dmpl__RepairOrderLineId__c,
                    dmpl__Discount__c, dmpl__DiscountAmount__c, dmpl__NetDiscount__c
             FROM dmpl__ClaimLine__c
             LIMIT 1
@@ -77,8 +77,8 @@ public with sharing class ClaimDataHelper {
                 dmpl__ItemCode__c, dmpl__UnitPrice2__c, dmpl__UnitPrice__c,
                 dmpl__ApproveAmount__c, dmpl__ApproveBaseAmount__c, dmpl__ApproveDiscount__c,
                 dmpl__ApproveDiscountAmount__c, dmpl__ApproveNetDiscount__c, dmpl__ApproveQuantity__c,
-                dmpl__BaseAmount__c, dmpl__ClaimAmount__c, dmpl__ClaimQuantity__c,
-                dmpl__Discount__c, dmpl__DiscountAmount__c, dmpl__NetDiscount__c,
+                dmpl__BaseAmount__c, dmpl__ClaimAmount__c, dmpl__ClaimQuantity__c,dmpl__ServiceContractId__c,
+                dmpl__Discount__c, dmpl__DiscountAmount__c, dmpl__NetDiscount__c,dmpl__RepairOrderLineId__c,
                 dmpl__ItemId__c, dmpl__ClaimId__c, dmpl__GoodsReceiptId__c,
                 dmpl__GoodsReceiptLineId__c, dmpl__ClaimBatchId__c
             FROM dmpl__ClaimLine__c
@@ -117,7 +117,7 @@ public with sharing class ClaimDataHelper {
                 dmpl__GoodsReceiptId__c = goodsReceiptId,
                 dmpl__PurchaseReturnId__c = purchaseReturnId 
             ),
-            'ClaimDefaults',
+           // 'ClaimDefaults',
             true
         );
     }
@@ -140,21 +140,21 @@ public with sharing class ClaimDataHelper {
                 dmpl__DocumentDate__c           = Date.today(),
                 dmpl__ItemServiceContractId__c  = itemServiceContractId
             ),
-            'ClaimDefaults',
+            //'ClaimDefaults',
             true
         );
     }
 
-
-
     public static dmpl__Claim__c getClaim(Id claimId) {
         return [
             SELECT Id, Name, dmpl__Status__c, dmpl__DocumentDate__c,
-                dmpl__ClaimType__c, dmpl__PartnerAccountId__c, 
-                dmpl__BranchId__c, dmpl__SupplierNameId__c,
+                dmpl__ClaimType__c, dmpl__PartnerAccountId__c, dmpl__PartnerAccountId__r.Name,
+                dmpl__BranchId__c, dmpl__BranchId__r.Name,
+                dmpl__SupplierNameId__c, dmpl__SupplierNameId__r.Name,
                 dmpl__SaleInvoiceId__c, dmpl__BillReturnId__c,
-                dmpl__RepairOrderId__c, dmpl__GoodsReceiptId__c,
-                dmpl__PurchaseReturnId__c 
+                dmpl__RepairOrderId__c, dmpl__GoodsReceiptId__c,dmpl__TotalApprovedQuantity__c,
+                dmpl__PurchaseReturnId__c, dmpl__TotalAmount__c,dmpl__TotalApprovedAmount__c,
+                dmpl__ItemServiceContractId__c
             FROM dmpl__Claim__c
             WHERE Id = :claimId
             LIMIT 1
@@ -184,21 +184,22 @@ public with sharing class ClaimDataHelper {
                 dmpl__GoodsReceiptId__c      = goodsReceiptId,
                 dmpl__GoodsReceiptLineId__c  = goodsReceiptLineId,
                 dmpl__ClaimBatchId__c        = claimBatchId,
-                dmpl__RepairOrderLineId__c     = repairOrderLineId
+                dmpl__RepairOrderLineId__c     = repairOrderLineId ?? null
             ),
-            'ClaimLineDefaults',
+           // 'ClaimLineDefaults',
             true
         );
     }
 
-    public static dmpl__ClaimLine__c createClaimLinewithGoodsRecieptLine(
+    public static dmpl__ClaimLine__c createClaimLineWithRepairOrder(
         Id claimId,
         Id itemId,
         Decimal claimQuantity,
         Decimal approveQuantity,
-        Id goodsReceiptId,
-        Id goodsReceiptLineId
-
+        Decimal unitPrice,
+        String claimType,
+        Id RrepairOrderId,
+        Id repairOrderLineId
     ) {
         return (dmpl__ClaimLine__c) TestFactory.createSObject(
             new dmpl__ClaimLine__c(
@@ -206,31 +207,50 @@ public with sharing class ClaimDataHelper {
                 dmpl__ItemId__c              = itemId,
                 dmpl__ClaimQuantity__c       = claimQuantity,
                 dmpl__ApproveQuantity__c     = approveQuantity,
-                dmpl__GoodsReceiptId__c      = goodsReceiptId,
-                dmpl__GoodsReceiptLineId__c  = goodsReceiptLineId
+                dmpl__UnitPrice__c           = unitPrice,
+                dmpl__ClaimType__c           = claimType,
+                dmpl__RepairOrderId__c      = RrepairOrderId,
+                dmpl__RepairOrderLineId__c     = repairOrderLineId ?? null
             ),
-            'ClaimLineDefaults',
+           // 'ClaimLineDefaults',
             true
         );
     }
 
+  public static dmpl__ClaimLine__c createClaimLinewithGoodsRecieptLine(
+    Id claimId,
+    Id itemId,
+    Decimal claimQuantity,
+    Decimal approveQuantity,
+    Id goodsReceiptId,
+    Id goodsReceiptLineId
+) {
+    return (dmpl__ClaimLine__c) TestFactory.createSObject(
+        new dmpl__ClaimLine__c(
+            dmpl__ClaimId__c             = claimId,
+            dmpl__ItemId__c              = itemId,
+            dmpl__ClaimQuantity__c       = claimQuantity,
+            dmpl__ApproveQuantity__c     = approveQuantity,
+            dmpl__GoodsReceiptId__c      = goodsReceiptId,
+            dmpl__GoodsReceiptLineId__c  = goodsReceiptLineId,
+            dmpl__UnitPrice__c           = 1500 
+        ),
+       // 'ClaimLineDefaults',
+        true
+    );
+}
+
 
     public static dmpl__ClaimLine__c getClaimLineById(Id claimLineId) {
-        List<dmpl__ClaimLine__c> results = [
-            SELECT Id, Name, dmpl__ExternalId__c, dmpl__Status__c, dmpl__ClaimType__c,
-                dmpl__ItemCode__c, dmpl__UnitPrice2__c, dmpl__UnitPrice__c,
-                dmpl__ApproveAmount__c, dmpl__ApproveBaseAmount__c, dmpl__ApproveDiscount__c,
-                dmpl__ApproveDiscountAmount__c, dmpl__ApproveNetDiscount__c, dmpl__ApproveQuantity__c,
-                dmpl__BaseAmount__c, dmpl__ClaimAmount__c, dmpl__ClaimQuantity__c,
-                dmpl__Discount__c, dmpl__DiscountAmount__c, dmpl__NetDiscount__c,
-                dmpl__ItemId__c, dmpl__ClaimId__c, dmpl__GoodsReceiptId__c,
-                dmpl__GoodsReceiptLineId__c, dmpl__ClaimBatchId__c, dmpl__RepairOrderLineId__c
-            FROM dmpl__ClaimLine__c
-            WHERE Id = :claimLineId
-            LIMIT 1
-        ];
-        return results.isEmpty() ? null : results[0];
-    }
+    List<dmpl__ClaimLine__c> results = [
+        SELECT Id, dmpl__UnitPrice__c, dmpl__ClaimQuantity__c, dmpl__BaseAmount__c,dmpl__ClaimId__c,dmpl__ClaimType__c,
+               dmpl__ApproveQuantity__c, dmpl__ClaimAmount__c, dmpl__ApproveAmount__c,
+               dmpl__ApproveBaseAmount__c
+        FROM dmpl__ClaimLine__c
+        WHERE Id = :claimLineId
+    ];
+    return results.isEmpty() ? null : results[0];
+}
 
 
 
@@ -251,7 +271,7 @@ public with sharing class ClaimDataHelper {
                 dmpl__PerformInventoryPosting__c=false,
                 dmpl__DocumentDate__c = date.today()
             ),
-            'PurchaseReturnDefaults',
+            //'PurchaseReturnDefaults',
             true
         );
     }
@@ -271,7 +291,7 @@ public with sharing class ClaimDataHelper {
                 dmpl__DocumentDate__c = Date.today(),
                 dmpl__Status__c = 'Draft'
             ),
-            'RepairOrderDefaults',
+            //'RepairOrderDefaults',
             true
         );
     }
@@ -292,7 +312,7 @@ public with sharing class ClaimDataHelper {
                 dmpl__Quantity__c = quantity,
                 dmpl__UnitPrice__c = unitPrice
             ),
-            'RepairOrderLineDefaults',
+            //'RepairOrderLineDefaults',
             true
         );
     }
@@ -372,7 +392,7 @@ public with sharing class ClaimDataHelper {
                 dmpl__TransporterRefrenceNumber__c = 'Test-TransporterRefrenceNumber',
                 dmpl__TransporterContactNumber__c = '7575555555'
             ),
-            'GoodsReceiptDefaults',
+            //'GoodsReceiptDefaults',
             true
         );
     }
@@ -414,7 +434,7 @@ public with sharing class ClaimDataHelper {
                 dmpl__ReceivedQuantity__c = 1,
                 dmpl__SupplierQuantity__c = 1
             ),
-            'GoodReceiptLineDefaults',
+           // 'GoodReceiptLineDefaults',
             true
         );
     }
@@ -453,7 +473,7 @@ public with sharing class ClaimDataHelper {
                 dmpl__PerformReleaseInvoice__c =false,
                 dmpl__IsInvoiceReleased__c = false
             ),
-            'PurchaseOrderDefaults',
+            //'PurchaseOrderDefaults',
             true
         );
     }
@@ -689,13 +709,39 @@ public with sharing class ClaimDataHelper {
     public static dmpl__ClaimBatchLine__c createClaimBatchLine(
         Id claimBatchId,
         Id claimId
-    ) {
-        return (dmpl__ClaimBatchLine__c) TestFactory.createSObject(
-            new dmpl__ClaimBatchLine__c(
-                dmpl__ClaimBatchId__c = claimBatchId,
-                dmpl__ClaimId__c = claimId
-            ),
-            true
-        );
-    }
+        ) {
+            return (dmpl__ClaimBatchLine__c) TestFactory.createSObject(
+                new dmpl__ClaimBatchLine__c(
+                    dmpl__ClaimBatchId__c = claimBatchId,
+                    dmpl__ClaimId__c = claimId
+                ),
+                true
+            );
+        }
+
+        public static dmpl__ClaimLine__c createClaimLineWithServiceContractAndClaimBatch(
+            Id claimId,
+            Id itemId,
+            Decimal claimQuantity,
+            Decimal unitPrice,
+            Id itemServiceContractId,
+            Decimal approveQuantity,
+            Id claimBatchId
+        ) {
+            return (dmpl__ClaimLine__c) TestFactory.createSObject(
+                new dmpl__ClaimLine__c(
+                    dmpl__ClaimId__c               = claimId,
+                    dmpl__ItemId__c                = itemId,
+                    dmpl__ClaimQuantity__c         = claimQuantity,
+                    dmpl__UnitPrice__c             = unitPrice,
+                    dmpl__ServiceContractId__c = itemServiceContractId,
+                    dmpl__ApproveQuantity__c = approveQuantity,
+                    dmpl__ClaimBatchId__c   = claimBatchId
+                ),
+                true
+            );
+        }
+
+
+
 }

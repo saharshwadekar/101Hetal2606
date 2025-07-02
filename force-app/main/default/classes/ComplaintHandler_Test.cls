@@ -380,30 +380,33 @@ public with sharing class ComplaintHandler_Test {
         System.assertEquals(itemGroup1.Id, complaintFault.dmpl__ApplicableToItemGroupId__c, 'Complaint Fault should be linked to Item Group');
     }
 
-    // @isTest
-    // public static void createComplaintFaultCreatedWithComplaintPositive() {
-    //     Test.startTest();
-    //     dmpl__Complaint__c complaint = ComplaintTestDataHelpers.createComplaint(
-    //         'Complaint-01',
-    //         'CF90',
-    //         null
-    //     );
+    @isTest
+    public static void createComplaintFaultWithNOComplaintPositive() {
+        Test.startTest();
+        dmpl__Complaint__c complaint = ComplaintTestDataHelpers.createComplaint(
+            'Complaint-01',
+            'CF90',
+            null
+        );
 
-    //     dmpl__ComplaintFault__c fault = ComplaintTestDataHelpers.createComplaintFault(
-    //         'ComplaintFault-01',
-    //         complaint,
-    //         null,
-    //         null,
-    //         null,
-    //         null
-    //     );
-    //     Test.stopTest();
+        dmpl__ComplaintFault__c fault = ComplaintTestDataHelpers.createComplaintFault(
+            'ComplaintFault-01',
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+        Test.stopTest();
 
-    //     dmpl__ComplaintFault__c insertedFault = ComplaintTestDataHelpers.getComplaintFault('ComplaintFault-01');
+        System.assertNotEquals(null, complaint.Id);
+        System.assertEquals('Complaint-01', complaint.Name);
+        System.assertEquals('CF90', complaint.dmpl__Code__c);
 
-    //     System.assertNotEquals(null, insertedFault, 'Complaint Fault should be created');
-    //     System.assertEquals(complaint.Id, insertedFault.dmpl__ComplaintId__c, 'Complaint should be linked to the Complaint Fault');
-    // }
+        System.assertNotEquals(null, fault.Id);
+        System.assertEquals('ComplaintFault-01', fault.Name);
+        System.assertEquals(null, fault.dmpl__ComplaintId__c);
+    }
 
     @isTest
     public static void updateComplaintFaultCreatedWithDiscontinuedItemPositive() {
@@ -465,6 +468,22 @@ public with sharing class ComplaintHandler_Test {
         dmpl__ComplaintFault__c updatedFault = ComplaintTestDataHelpers.getComplaintFault('ComplaintFault-01');
         System.assertNotEquals(null, updatedFault, 'Complaint Fault should exist');
         System.assertEquals(item2.Id, updatedFault.dmpl__ApplicableToItemId__c, 'Item should be updated to the inactive item successfully');
+    }
+
+    @isTest
+    public static void createComplaintFaultWithNoComplaintNegative() {
+        Test.startTest();
+        dmpl__ComplaintFault__c fault = ComplaintTestDataHelpers.createComplaintFault(
+            'ComplaintFault-01',
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+        Test.stopTest();
+
+        System.assertNotEquals(null, fault.Id);
     }
 
     @isTest
@@ -611,8 +630,6 @@ public with sharing class ComplaintHandler_Test {
         update complaintItem;
         Test.stopTest();
 
-        //dmpl__ComplaintItem__c updatedItem = ComplaintTestDataHelpers.getComplaintItem(complaint.Id);
-
         System.assertNotEquals(null, complaintItem, 'Complaint Item should exist after update');
         System.assertEquals(item3.Id, complaintItem.dmpl__ItemId__c, 'Complaint Item should be updated to new Item');
         System.assertEquals(complaint.Id, complaintItem.dmpl__ComplaintId__c, 'Complaint reference should remain unchanged');
@@ -645,8 +662,6 @@ public with sharing class ComplaintHandler_Test {
         complaintItem.dmpl__ComplaintFaultCodeId__c = complaintFault.Id;
         update complaintItem;
         Test.stopTest();
-
-        //dmpl__ComplaintItem__c updatedItem = ComplaintTestDataHelpers.getComplaintItem(complaint.Id);
 
         System.assertNotEquals(null, complaintItem, 'Updated Complaint Item should exist');
         System.assertEquals(item1.Id, complaintItem.dmpl__ItemId__c, 'Item reference should remain unchanged');
@@ -732,12 +747,6 @@ public with sharing class ComplaintHandler_Test {
         System.assertEquals(null, complaintItem.dmpl__ItemId__c, 'Item should be null after update');
         System.assertEquals(null, complaintItem.dmpl__ComplaintId__c, 'Complaint should be null after update');
 
-        // dmpl__ComplaintItem__c updatedItem = ComplaintTestDataHelpers.getComplaintItem(complaintItem.Id);
-        // if(updatedItem != null){
-        //     System.assertNotEquals(null, updatedItem, 'Complaint Item should exist after update');
-        //     System.assertEquals(null, updatedItem.dmpl__ItemId__c, 'Item should be null after update');
-        //     System.assertEquals(null, updatedItem.dmpl__ComplaintId__c, 'Complaint should be null after update');
-        // }
     }
     //complaint line
     @isTest
@@ -816,16 +825,9 @@ public with sharing class ComplaintHandler_Test {
             null,
             null
         );
-
-        //dmpl__Quote__c estimate = ComplaintTestDataHelpers.createQuote(customer1, branch1);
-        //dmpl__QuoteLine__c quoteLine = ComplaintTestDataHelpers.createQuoteLine(estimate, item1);
-
         dmpl__RepairOrder__c repairOrder = ComplaintTestDataHelpers.createRepairOrder(
             item1,
             branch1,
-            //asset1,
-            //quoteLine,
-            //estimate,
             customer1
         );
 
@@ -884,7 +886,6 @@ public with sharing class ComplaintHandler_Test {
         Account partner = TestDataHelpers.getPartnerAccount('Partner 1');
         Account customer = TestDataHelpers.getCustomerAccount('Customer 1');
         dmpl__Branch__c branch = TestDataHelpers.getBranch('Branch 1');
-        //Asset asset = TestDataHelpers.getAsset('Asset1');
         dmpl__Resource__c resource = ComplaintTestDataHelpers.getResource('Resource 1');
 
         dmpl__Quote__c quote = ComplaintTestDataHelpers.createQuote(customer, branch);

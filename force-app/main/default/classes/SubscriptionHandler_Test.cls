@@ -14,9 +14,9 @@ public with sharing class SubscriptionHandler_Test {
         dmpl__PriceList__c priceList = TestDataHelpers.createPriceList(partnerAccount,branch);
         dmpl__PriceListRules__c priceListRule = TestDataHelpers.createPriceListRules(priceList,item);
         dmpl__SaleOrder__c saleOrder = SaleOrderDataHelper.createSaleOrder(customerAccount,branch,contactAddress,priceList);
-        dmpl__SaleInvoice__c saleInvoice = SaleInvoiceTestDataHelpers.createSaleInvoice(TestDataHelpers.getCustomerAccount(),TestDataHelpers.getBranch(),
+        dmpl__SaleInvoice__c saleInvoice = SaleInvoiceDataHelper.createSaleInvoice(TestDataHelpers.getCustomerAccount(),TestDataHelpers.getBranch(),
                                                                                             saleOrder,TestDataHelpers.getPriceList());
-        dmpl__SaleInvoiceLine__c saleInvoiceLine = SaleInvoiceTestDataHelpers.createSaleInvoiceLine(saleInvoice,item,sku,itemLot,taxGroup,priceListRule);
+        dmpl__SaleInvoiceLine__c saleInvoiceLine = SaleInvoiceDataHelper.createSaleInvoiceLine(saleInvoice,item,sku,itemLot,taxGroup,priceListRule);
         dmpl__Subscription__c subscription1 = SubscriptionDataHelper.createSubscription(saleInvoice,saleInvoiceLine,Item,saleInvoiceLine.dmpl__AssetId__c);
 
 

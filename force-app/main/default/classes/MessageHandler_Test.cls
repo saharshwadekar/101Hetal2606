@@ -1,6 +1,5 @@
 @isTest
 public with sharing class MessageHandler_Test {
-    
     @TestSetup
     static void createRequiredData() {
         dmpl__MessageConfiguration__c config = MessageDataHelper.createMessageConfiguration();
@@ -8,22 +7,22 @@ public with sharing class MessageHandler_Test {
         MessageDataHelper.createDefaultMessage();
         Account partnerAccount1 = TestDataHelpers.createPartnerAccount(
             'Partner 1',
-        false,
-        true,
-        false,
-        true,
-        'MG Road',
-        'Bengaluru',
-        'Karnataka',
-        'India',
-        '560001',
-        '56 Industrial Layout',
-        'Bengaluru',
-        'Karnataka',
-        'India',
-        '560095',
-        '91-9876543210'
-            );
+            false,
+            true,
+            false,
+            true,
+            'MG Road',
+            'Bengaluru',
+            'Karnataka',
+            'India',
+            '560001',
+            '56 Industrial Layout',
+            'Bengaluru',
+            'Karnataka',
+            'India',
+            '560095',
+            '91-9876543210'
+        );
     }
     
     @isTest
@@ -63,7 +62,6 @@ public with sharing class MessageHandler_Test {
         mc.dmpl__TriggerEvent__c = 'Scheduled';
         mc.dmpl__TriggerObjectName__c = 'Contact';
         update mc;
-        
         dmpl__MessageConfiguration__c updated = MessageDataHelper.getMessageConfigurationById(mc.Id);
         System.assertEquals('Updated Message Config', updated.Name);
         System.assertEquals('UpdatedHandler', updated.dmpl__CustomHandlerName__c, 'Custom Handler Name should be updated');
@@ -89,11 +87,8 @@ public with sharing class MessageHandler_Test {
         rule.dmpl__FieldValue__c = 'High';
         rule.dmpl__Operation__c = 'equals';
         rule.dmpl__SequenceNumber__c = 2;
-        
         update rule;
-        
         dmpl__MessageRule__c updated = MessageDataHelper.getMessageRuleById(rule.Id);
-        
         System.assertEquals('Priority', updated.dmpl__FieldName__c, 'Field Name should be updated');
         System.assertEquals('High', updated.dmpl__FieldValue__c, 'Field Value should be updated');
         System.assertEquals('equals', updated.dmpl__Operation__c, 'Operation should be updated');
@@ -115,9 +110,7 @@ public with sharing class MessageHandler_Test {
         msg.dmpl__Status__c = 'Sent';
         msg.dmpl__Subject__c = 'Updated Subject';
         msg.dmpl__WhatId__c = '001ZZZZZZZZZZZZZZZ';
-        
         dmpl__Message__c updated = MessageDataHelper.updateMessage(msg);
-        
         System.assertEquals('Updated Message Name', updated.Name);
         System.assertEquals('Updated error', updated.dmpl__ErrorMessage__c);
         System.assertEquals('Updated message body', updated.dmpl__MessageBody__c);
@@ -136,7 +129,6 @@ public with sharing class MessageHandler_Test {
         Test.startTest();
         dmpl__MessageRule__c rule = MessageDataHelper.getMessageRule();
         delete rule;
-     
         List<dmpl__MessageRule__c> result = MessageDataHelper.getMessageRulesById(rule.Id);
         Test.stopTest();
         System.assertEquals(0, result.size(), 'Message Rule record should be deleted');
@@ -160,9 +152,7 @@ public with sharing class MessageHandler_Test {
         ];
         System.assertEquals(0, result.size(), 'Message should be deleted');
     }
-    
-    //New Message Configuration creation with Message Configuration Name
-    //New Message Configuration creation with Trigger Object Name
+
     @isTest
     static void createMessageConfigurationWithNamePositive() {
         Test.startTest();
@@ -172,8 +162,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals('MSG Config', msgConfig.Name, 'Message Configuration Name should match');
         System.assertEquals('MSG Trigger', msgConfig.dmpl__TriggerObjectName__c, 'Trigger Object Name should match');
     }
-    
-    //New Message Configuration creation with Trigger Event
+
     @isTest
     static void createMessageConfigurationWithTriggerEventPositive() {
         Test.startTest();
@@ -184,8 +173,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals('MSG Config', msgConfig.Name, 'Message Configuration Name should match');
         System.assertEquals('MSG Trigger', msgConfig.dmpl__TriggerObjectName__c, 'Trigger Object Name should match');
     }
-    
-    //New Message Configuration creation with Provider Type
+
     @isTest
     static void createMessageConfigurationWithProviderTypePositive(){
         Test.startTest();
@@ -197,8 +185,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals('MSG Trigger', msgConfig.dmpl__TriggerObjectName__c, 'Trigger Object Name should match');
         System.assertEquals('AFTER_INSERT', msgConfig.dmpl__TriggerEvent__c, 'Trigger Event should match');
     }
-    
-    //New Message Configuration creation with Interface Provider
+
     @isTest
     static void createMessageConfigurationWithInterfaceProviderPositive() {
         Test.startTest();
@@ -213,8 +200,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals('AFTER_INSERT', msgConfig.dmpl__TriggerEvent__c, 'Trigger Event should match');
         System.assertEquals(interfaceServiceProvider.Id, msgConfig.dmpl__InterfaceProviderId__c, 'Interface Service Provider Id should match');
     }
-    
-    //New Message Configuration creation with Interface Request
+
     @isTest
     static void createMessageConfigurationWithInterfaceRequestPositive() {
         Test.startTest();
@@ -231,9 +217,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals(interfaceServiceProvider.Id, msgConfig.dmpl__InterfaceProviderId__c, 'Interface Service Provider Id should match');
         System.assertEquals(interfaceRequest.Id, msgConfig.dmpl__InterfaceRequestId__c, 'Interface Service Provider Request Id should match');
     }
-    
-    //New Message Configuration creation with deleting Interface Request
-    //New Message Configuration creation without Interface Request
+
     @isTest
     static void createMessageConfigurationWithDeletedInterfaceRequestPositive() {
         Test.startTest();
@@ -250,8 +234,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals('AFTER_INSERT', msgConfig.dmpl__TriggerEvent__c, 'Trigger Event should match');
         System.assertEquals(interfaceServiceProvider.Id, msgConfig.dmpl__InterfaceProviderId__c, 'Interface Service Provider Id should match');
     }
-    
-    //New Message Configuration creation without Trigger Event
+
     @isTest
     static void createMessageConfigurationWithoutTriggerEventPositive() {
         Test.startTest();
@@ -262,8 +245,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals('MSG Trigger', msgConfig.dmpl__TriggerObjectName__c, 'Trigger Object Name should match');
         System.assertEquals(null, msgConfig.dmpl__TriggerEvent__c, 'Trigger Event should be null');
     }
-    
-    //New Message Configuration creation without Message Configuration Name
+
     @isTest
     static void createMessageConfigurationWithoutNameNegative() {
         Test.startTest();
@@ -275,8 +257,7 @@ public with sharing class MessageHandler_Test {
         }
         Test.stopTest();
     }
-    
-    //New Message Configuration creation without Trigger Object Name
+
     @isTest
     static void createMessageConfigurationWithoutTriggerObjectNameNegative() {
         Test.startTest();
@@ -288,8 +269,7 @@ public with sharing class MessageHandler_Test {
         }
         Test.stopTest();
     }
-    
-    //New Message Configuration creation with invalid Interface Provider
+
     @isTest
     static void createMessageConfigurationWithInvalidInterfaceProviderNegative() {
         Test.startTest();
@@ -303,9 +283,7 @@ public with sharing class MessageHandler_Test {
         }
         Test.stopTest();
     }
-    
-    //Can delete the message configuration record
-    //Can delete the valid message Configuration record
+
     @isTest
     static void deleteValidMessageConfigurationRecordPositive() {
         Test.startTest();
@@ -321,8 +299,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals(null, deletedMsgconfig, 'Expected message Configuration to be deleted.');
         Test.stopTest();
     }
-    
-    //New Message creation with Message Name
+
     @isTest
     static void createMessageWithNamePositive() {
         Test.startTest();
@@ -331,8 +308,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, message.Id, 'Message should be created with Name');
         System.assertEquals('Test', message.Name, 'Message Name should match');
     }
-    
-    //New Message creation with Status as Draft
+
     @isTest
     static void createMessageWithStatusDraftPositive() {
         Test.startTest();
@@ -341,8 +317,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, message.Id, 'Message should be created with Status as Draft');
         System.assertEquals('Draft', message.dmpl__Status__c, 'Message Status should be Draft');
     }
-    
-    //New Message creation with Status as Queued
+
     @isTest
     static void createMessageWithStatusQueuedPositive() {
         Test.startTest();
@@ -351,8 +326,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, message.Id, 'Message should be created with Status as Queued');
         System.assertEquals('Queued', message.dmpl__Status__c, 'Message Status should be Queued');
     }
-    
-    //New Message creation with Status as Sent
+
     @isTest
     static void createMessageWithStatusSentPositive() {
         Test.startTest();
@@ -361,8 +335,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, message.Id, 'Message should be created with Status as Sent');
         System.assertEquals('Sent', message.dmpl__Status__c, 'Message Status should be Sent');
     }
-    
-    // New Message creation with Status as Error
+
     @isTest
     static void createMessageWithStatusErrorPositive() {
         Test.startTest();
@@ -371,8 +344,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, message.Id, 'Message should be created with Status as Error');
         System.assertEquals('Error', message.dmpl__Status__c, 'Message Status should be Error');
     }
-    
-    //New Message creation with Status as Bounced
+
     @isTest
     static void createMessageWithStatusBouncedPositive() {
         Test.startTest();
@@ -381,8 +353,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, message.Id, 'Message should be created with Status as Bounced');
         System.assertEquals('Bounced', message.dmpl__Status__c, 'Message Status should be Bounced');
     }
-    
-    //New Message creation with Message Configuration
+
     @isTest
     static void createMessageWithConfigurationPositive() {
         Test.startTest();
@@ -394,8 +365,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals('Test Message', message.Name, 'Message Name should match');
         System.assertEquals('Draft', message.dmpl__Status__c, 'Message Status should be Draft');
     }
-    
-    //New Message creation with Sender Name and Sender
+
     @isTest
     static void createMessageWithSenderDetailsPositive() {
         Test.startTest();
@@ -407,8 +377,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals('Test Message', message.Name, 'Message Name should match');
         System.assertEquals('Draft', message.dmpl__Status__c, 'Message Status should be Draft');
     }
-    
-    //New Message creation with Sender Name and Sender (Edit)
+
     @isTest
     static void createMessageWithSenderDetailsEditPositive() {
         Test.startTest();
@@ -424,8 +393,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals('Test Message', updatedMessage.Name, 'Message Name should match');
         System.assertEquals('Draft', updatedMessage.dmpl__Status__c, 'Message Status should be Draft');
     }
-    
-    //New Message creation with Recipient name
+
     @isTest
     static void createMessageWithRecipientNamePositive() {
         Test.startTest();
@@ -434,8 +402,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, message.Id, 'Message should be created with Recipient Name');
         System.assertEquals('XYZ', message.dmpl__Recipient__c, 'Recipient Name should match');
     }
-    
-    //New Message creation with Subject and Message Body
+
     @isTest
     static void createMessageWithSubjectAndBodyPositive() {
         Test.startTest();
@@ -445,8 +412,7 @@ public with sharing class MessageHandler_Test {
         System.assertEquals('Test Subject', message.dmpl__Subject__c, 'Subject should match');
         System.assertEquals('This is a test message body.', message.dmpl__MessageBody__c, 'Message Body should match');
     }
-    
-    //New Message creation without Status
+
     @isTest
     static void createMessageWithoutStatusPositive() {
         Test.startTest();
@@ -456,20 +422,17 @@ public with sharing class MessageHandler_Test {
         System.assertEquals(null, message.dmpl__Status__c, 'Default Status should be Draft');
         System.assertEquals('Test Message', message.Name, 'Message Name should match');
     }
-    
-    //Can delete the message record
+
     @isTest
 	static void deleteMessageRecordPositive() {
-    Test.startTest();
-    dmpl__Message__c message = MessageDataHelper.createMessage('Test Message', 'Draft', null, null, null, null, null, null);
-    dmpl__Message__c deletedMessage = MessageDataHelper.getMessage(message.Id);
-    delete message;
-    System.assertNotEquals(null, deletedMessage, 'Expected message to be deleted.');
-    Test.stopTest();
-}
+        Test.startTest();
+        dmpl__Message__c message = MessageDataHelper.createMessage('Test Message', 'Draft', null, null, null, null, null, null);
+        dmpl__Message__c deletedMessage = MessageDataHelper.getMessage(message.Id);
+        delete message;
+        System.assertNotEquals(null, deletedMessage, 'Expected message to be deleted.');
+        Test.stopTest();
+    }
 
-    
-    //Message creation without Message Name
     @isTest
     static void createMessageWithoutNameNegative() {
         Test.startTest();
@@ -481,8 +444,7 @@ public with sharing class MessageHandler_Test {
         }
         Test.stopTest();
     }
-    
-    //Message creation with deleting Message Name(Edit)
+
     @isTest
     static void updateMessageWithoutNameNegative() {
         Test.startTest();
@@ -493,8 +455,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, updatedMessage, 'Message should be updated without Name');
         Test.stopTest();
     }
-    
-    //Message creation with deleting Subject(Edit)
+
     @isTest
     static void updateMessageWithoutSubjectNegative() {
         Test.startTest();
@@ -508,8 +469,6 @@ public with sharing class MessageHandler_Test {
         System.assertEquals(null, updatedMessage.dmpl__Subject__c, 'Subject should be deleted');
     }
     
-    //New Message Rule creation with Message Rule Name (Field selection for condition)
-    //New Message Rule creation linked to valid Message Configuration (via Lookup)
     @isTest
     static void createMessageRuleWithNameAndFieldSelectionPositive() {
         Test.startTest();
@@ -519,8 +478,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, rule.Id, 'Message Rule should be created with Name and Field Selection');
         System.assertEquals('Account', rule.dmpl__FieldName__c, 'Field Name should match');
     }
-    
-    //New Message Rule creation with Operation as Equal
+
     @isTest
     static void createMessageRuleWithOperationEqualPositive() {
         Test.startTest();
@@ -530,8 +488,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, rule.Id, 'Message Rule should be created with Operation as Equal');
         System.assertEquals('equals', rule.dmpl__Operation__c, 'Operation should match');
     }
-    
-    //New Message Rule creation with Operation as Not Equal
+
     @isTest
     static void createMessageRuleWithOperationNotEqualPositive() {
         Test.startTest();
@@ -541,8 +498,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, rule.Id, 'Message Rule should be created with Operation as Not Equal');
         System.assertEquals('notEqual', rule.dmpl__Operation__c, 'Operation should match');
     }
-    
-    //New Message Rule creation with Operation as greaterOrEqual
+
     @isTest
     static void createMessageRuleWithOperationGreaterOrEqualPositive() {
         Test.startTest();
@@ -552,8 +508,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, rule.Id, 'Message Rule should be created with Operation as greaterOrEqual');
         System.assertEquals('greaterOrEqual', rule.dmpl__Operation__c, 'Operation should match');
     }
-    
-    //New Message Rule creation with Operation as lessOrEqual
+
     @isTest
     static void createMessageRuleWithOperationLessOrEqualPositive() {
         Test.startTest();
@@ -563,8 +518,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, rule.Id, 'Message Rule should be created with Operation as lessOrEqual');
         System.assertEquals('lessOrEqual', rule.dmpl__Operation__c, 'Operation should match');
     }
-    
-    //New Message Rule creation with Operation as greaterThan
+
     @isTest
     static void createMessageRuleWithOperationGreaterThanPositive() {
         Test.startTest();
@@ -574,8 +528,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, rule.Id, 'Message Rule should be created with Operation as greaterThan');
         System.assertEquals('greaterThan', rule.dmpl__Operation__c, 'Operation should match');
     }
-    
-    //New Message Rule creation with Operation as lessThan
+
     @isTest
     static void createMessageRuleWithOperationLessThanPositive() {
         Test.startTest();
@@ -585,8 +538,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, rule.Id, 'Message Rule should be created with Operation as lessThan');
         System.assertEquals('lessThan', rule.dmpl__Operation__c, 'Operation should match');
     }
-    
-    //New Message Rule creation with Field Value
+
     @isTest
     static void createMessageRuleWithFieldValuePositive() {
         Test.startTest();
@@ -596,8 +548,7 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, rule.Id, 'Message Rule should be created with Field Value');
         System.assertEquals('Create', rule.dmpl__FieldValue__c, 'Field Value should match');
     }
-    
-    //New Message Rule creation with valid Sequence Number
+
     @isTest
     static void createMessageRuleWithValidSequenceNumberPositive() {
         Test.startTest();
@@ -607,8 +558,18 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, rule.Id, 'Message Rule should be created with valid Sequence Number');
         System.assertEquals(1, rule.dmpl__SequenceNumber__c, 'Sequence Number should match');
     }
-    
-    //New Message Rule creation without entering Field Value
+
+    //New Message Rule creation linked to valid Message Configuration (via Lookup)
+    @isTest
+    static void createMessageRuleWithValidConfigurationPositive() {
+        Test.startTest();
+        dmpl__MessageConfiguration__c config = MessageDataHelper.createMessageConfiguration('Test Config', 'Test Trigger', 'AFTER_INSERT', 'Interface Provider', null, null);
+        dmpl__MessageRule__c rule = MessageDataHelper.createMessageRule('equals', 'Account', 'Create', 1, config);
+        Test.stopTest();
+        System.assertNotEquals(null, rule.Id, 'Message Rule should be created with valid Configuration');
+        System.assertEquals(config.Id, rule.dmpl__MessageConfigurationId__c, 'Message Configuration should match');
+    }
+
     @isTest
     static void createMessageRuleWithoutFieldValuePositive() {
         Test.startTest();
@@ -619,7 +580,6 @@ public with sharing class MessageHandler_Test {
         System.assertEquals(null, rule.dmpl__FieldValue__c, 'Field Value should be null');
     }
     
-    //New Message Rule creation without Sequence Number
     @isTest
     static void createMessageRuleWithoutSequenceNumberPositive() {
         Test.startTest();
@@ -630,7 +590,6 @@ public with sharing class MessageHandler_Test {
         System.assertEquals(null, rule.dmpl__SequenceNumber__c, 'Sequence Number should be null');
     }
     
-    //New Message Rule creation with Operation not selected
     @isTest
     static void createMessageRuleWithoutOperationPositive() {
         Test.startTest();
@@ -641,7 +600,6 @@ public with sharing class MessageHandler_Test {
         System.assertEquals(null, rule.dmpl__Operation__c, 'Operation should be null');
     }
     
-    //Deletion of the message Rule record
     @isTest
     static void deleteMessageRuleRecordPositive() {
         Test.startTest();
@@ -658,7 +616,6 @@ public with sharing class MessageHandler_Test {
         Test.stopTest();
     }
 
-    //New Message Rule creation with invalid Operation (invalid picklist entry via API)
     @isTest
     static void createMessageRuleWithInvalidOperationNegative() {
         Test.startTest();
@@ -672,7 +629,6 @@ public with sharing class MessageHandler_Test {
         Test.stopTest();
     }
     
-    //New Message Rule creation with Field Value exceeding 255 characters
     @isTest
     static void createMessageRuleWithFieldValueExceedingLimitNegative() {
         Test.startTest();
@@ -687,7 +643,6 @@ public with sharing class MessageHandler_Test {
         Test.stopTest();
     }
     
-    //New Message Rule creation with negative Sequence Number
     @isTest
     static void createMessageRuleWithNegativeSequenceNumberNegative(){
         Test.startTest();
@@ -697,7 +652,6 @@ public with sharing class MessageHandler_Test {
         System.assertNotEquals(null, rule.Id, ' Message Rule should be created with negative Sequence Number');
     }
 
-    //New Message Rule creation with deleting Message Configuration
     @isTest
     static void createMessageRuleWithDeletedConfigurationNegative() {
         Test.startTest();

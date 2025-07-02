@@ -94,55 +94,57 @@ public with sharing class SaleInvoiceDataHelper {
             ];
     }
 
-    public static dmpl__SaleInvoice__c getSaleInvoice(Id id){
-        return [SELECT 
-                Id,
-                Name,
-                dmpl__AccountId__c,
-                dmpl__AccountId__r.Name,
-                dmpl__TaxGroupId__r.Name,
-                dmpl__BillingAddressId__r.Name,
-                dmpl__ClaimId__c,
-                dmpl__PerformKPICalculation__c,
-                dmpl__InvoiceGroup__c,
-                dmpl__PerformGLPosting__c,
-                dmpl__Status__c,
-                dmpl__BranchId__c,
-                dmpl__SaleOrderId__c,
-                dmpl__OutstandingAmount__c,
-                dmpl__PartnerAccountId__c,
-                dmpl__DocumentDate__c,
-                dmpl__FinanceAmount__c,
-                dmpl__AmountPaid__c,
-                dmpl__ClaimBatchId__c,
-                dmpl__TaxGroupId__c,
-                dmpl__TCSEligibleAmount__c,
-                dmpl__TransactionType__c,
-                dmpl__PriceListId__c,
-                dmpl__PriceListId__r.Name,
-                dmpl__AccountName__c,
-                dmpl__TaxSupplyType__c,
-                dmpl__BillingStreet__c,
-                dmpl__BillingCity__c,
-                dmpl__BillingState__c,
-                dmpl__BillingCountry__c,
-                dmpl__BillingPostalCode__c,
-                dmpl__ShippingStreet__c,
-                dmpl__ShippingCity__c,
-                dmpl__ShippingState__c,
-                dmpl__ShippingPostalCode__c,
-                dmpl__ShippingCountry__c,
-                dmpl__TotalLineBaseAmount__c,
-                dmpl__TotalSchemeDiscountAmount__c,
-                dmpl__TotalLineGrossAmount__c,
-                dmpl__TotalTaxAmount__c,
-                dmpl__TotalLineTaxAmount__c,
-                dmpl__TotalDiscountAmount__c
-                FROM dmpl__SaleInvoice__c   
-                WHERE Id =: id
-                LIMIT 1
-            ];
-    }
+    public static dmpl__SaleInvoice__c getSaleInvoice(Id id) {
+		return [
+			SELECT 
+				Id,
+				Name,
+				dmpl__AccountId__c,
+				dmpl__AccountId__r.Name,
+				dmpl__AccountName__c,
+				dmpl__TaxGroupId__c,
+				dmpl__TaxGroupId__r.Name,
+				dmpl__BillingAddressId__r.Name,
+				dmpl__ClaimId__c,
+				dmpl__PerformKPICalculation__c,
+				dmpl__InvoiceGroup__c,
+				dmpl__PerformGLPosting__c,
+				dmpl__Status__c,
+				dmpl__BranchId__c,
+				dmpl__SaleOrderId__c,
+				dmpl__OutstandingAmount__c,
+				dmpl__PartnerAccountId__c,
+				dmpl__DocumentDate__c,
+				dmpl__FinanceAmount__c,
+				dmpl__AmountPaid__c,
+				dmpl__ClaimBatchId__c,
+				dmpl__TCSEligibleAmount__c,
+				dmpl__TransactionType__c,
+				dmpl__PriceListId__c,
+				dmpl__PriceListId__r.Name,
+				dmpl__TaxSupplyType__c,
+				dmpl__BillingStreet__c,
+				dmpl__BillingCity__c,
+				dmpl__BillingState__c,
+				dmpl__BillingCountry__c,
+				dmpl__BillingPostalCode__c,
+				dmpl__ShippingStreet__c,
+				dmpl__ShippingCity__c,
+				dmpl__ShippingState__c,
+				dmpl__ShippingPostalCode__c,
+				dmpl__ShippingCountry__c,
+				dmpl__TotalLineBaseAmount__c,
+				dmpl__TotalSchemeDiscountAmount__c,
+				dmpl__TotalLineGrossAmount__c,
+				dmpl__TotalTaxAmount__c,
+				dmpl__TotalLineTaxAmount__c,
+				dmpl__TotalDiscountAmount__c
+			FROM dmpl__SaleInvoice__c   
+			WHERE Id = :id
+			LIMIT 1
+		];
+	}
+
 
     public static dmpl__SaleInvoiceLine__c createSaleInvoiceLine(
         dmpl__SaleInvoice__c saleInvoice,
@@ -237,48 +239,48 @@ public with sharing class SaleInvoiceDataHelper {
     
     public static dmpl__SaleInvoiceLine__c getSaleInvoiceLine(Id id){
         return [SELECT 
-        Id,
-        Name,
-        dmpl__Discount__c,
-        dmpl__DiscountAmount__c,
-        dmpl__GeneralLedgerId__c ,
-        dmpl__GLAccountId__c,
-        dmpl__InventoryLedgerId__c ,
-        dmpl__ItemLotId__c,
-        dmpl__SaleOrderLineId__c,
-        dmpl__SchemeDiscount__c ,
-        dmpl__SchemeDiscountAmount__c ,
-        dmpl__NetSchemeDiscount__c,
-        dmpl__NetDiscount__c,
-        dmpl__GrossAmount__c,
-        dmpl__BaseAmount__c,
-        dmpl__StorageLocationId__c ,
-        dmpl__TaxAmount__c ,
-        dmpl__TaxGroupId__c,
-        dmpl__TaxGroupId__r.Name,
-        dmpl__UnitPrice__c,
-        dmpl__Tax1__c,
-        dmpl__Tax2__c,
-        dmpl__Tax1Name__c,
-        dmpl__Tax2Name__c,
-        dmpl__Tax1Rate__c,
-        dmpl__Tax2Rate__c,
-        dmpl__Tax2Type__c,
-        dmpl__Tax1Type__c,
-        dmpl__RepairOrderLineId__c,
-        dmpl__SaleInvoiceId__c,
-        dmpl__SchemeLineId__c,
-        dmpl__SchemeLineId__r.Name,
-        dmpl__SKUId__c,
-        dmpl__AssetId__c,
-        dmpl__ItemId__c,
-        dmpl__EligibleReturnQuantity__c,
-        dmpl__Quantity__c,
-        dmpl__ContractDiscount__c,
-        dmpl__AllocatedQuantity__c
-        FROM dmpl__SaleInvoiceLine__c   
-        WHERE Id = :id
-        LIMIT 1
+			Id,
+			Name,
+			dmpl__Discount__c,
+			dmpl__DiscountAmount__c,
+			dmpl__GeneralLedgerId__c ,
+			dmpl__GLAccountId__c,
+			dmpl__InventoryLedgerId__c ,
+			dmpl__ItemLotId__c,
+			dmpl__SaleOrderLineId__c,
+			dmpl__SchemeDiscount__c ,
+			dmpl__SchemeDiscountAmount__c ,
+			dmpl__NetSchemeDiscount__c,
+			dmpl__NetDiscount__c,
+			dmpl__GrossAmount__c,
+			dmpl__BaseAmount__c,
+			dmpl__StorageLocationId__c ,
+			dmpl__TaxAmount__c ,
+			dmpl__TaxGroupId__c,
+			dmpl__TaxGroupId__r.Name,
+			dmpl__UnitPrice__c,
+			dmpl__Tax1__c,
+			dmpl__Tax2__c,
+			dmpl__Tax1Name__c,
+			dmpl__Tax2Name__c,
+			dmpl__Tax1Rate__c,
+			dmpl__Tax2Rate__c,
+			dmpl__Tax2Type__c,
+			dmpl__Tax1Type__c,
+			dmpl__RepairOrderLineId__c,
+			dmpl__SaleInvoiceId__c,
+			dmpl__SchemeLineId__c,
+			dmpl__SchemeLineId__r.Name,
+			dmpl__SKUId__c,
+			dmpl__AssetId__c,
+			dmpl__ItemId__c,
+			dmpl__EligibleReturnQuantity__c,
+			dmpl__Quantity__c,
+			dmpl__ContractDiscount__c,
+			dmpl__AllocatedQuantity__c
+			FROM dmpl__SaleInvoiceLine__c   
+			WHERE Id = :id
+			LIMIT 1
         ];
     }
     
